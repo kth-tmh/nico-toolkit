@@ -1,0 +1,97 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.7 [en] (WinNT; U) [Netscape]">
+   <title>Groups</title>
+</head>
+<body bgcolor="#FFFFFF">
+
+<center>
+<h1>
+<font size=+2>GROUPS</font></h1></center>
+
+<h2>
+Layers</h2>
+<font face="Arial,Helvetica">Groups are the mechanism of the NICO toolkit
+to handle the structure of the networks. In it's simplest form, a group
+has the same function as a so called layer, but a group is really a much
+more powerful object than a layer. The following example creates a group
+with 7 unnamed units:</font>
+<ul><tt><font size=+1>AddGroup my_layer my_net.rtdnn</font></tt>
+<br><tt><font size=+1>AddUnit -u7 my_layer my_net.rtdnn</font></tt></ul>
+<font face="Arial,Helvetica">Groups can have sub-groups as in this example:</font>
+<ul><tt><font size=+1>AddGroup SuperGroup my_net.rtdnn</font></tt>
+<br><tt><font size=+1>AddGroup SubGroup1 my_net.rtdnn</font></tt>
+<br><tt><font size=+1>AddGroup SubGroup2 my_net.rtdnn</font></tt>
+<br><tt><font size=+1>Move SubGroup1 SuperGroup my_net.rtdnn</font></tt>
+<br><tt><font size=+1>Move SubGroup2 SuperGroup my_net.rtdnn</font></tt></ul>
+<font face="Arial,Helvetica">Here we used the command Move to make the
+subgroups members of the supergroup. When a group (or any other object)
+is created, it becomes a member of the root group "network", but the following
+commands can be used to control the object hierarcy of the network:</font>
+<ul><tt><font size=+1>Move, Copy, Join, UnJoin, Import</font></tt></ul>
+<font face="Arial,Helvetica">And the following two commands removes and
+renames objects:</font>
+<ul><tt><font size=+1>Remove, Rename</font></tt></ul>
+<font face="Arial,Helvetica">When referring to a sub-object in a network,
+a c-like "dot-syntax" is used. For examle, the following command:</font>
+<ul><tt><font size=+1>Display -o SuperGroup.SubGroup1 my_net.rtdnn</font></tt></ul>
+<font face="Arial,Helvetica">will output a description of the sub-group
+of "SuperGroup" even if there exists another object with the same name
+on the top-level. Unnamed objects can also be referred to by using the
+"#"-character. For example:</font>
+<ul><tt><font size=+1>Display my_layer#5 my_net.rtdnn</font></tt></ul>
+<font face="Arial,Helvetica"><font size=-1>&nbsp;</font>will output a description
+of the 5th object (for example an unnamed unit) of "my_layer".</font>
+<h2>
+Modularity</h2>
+<font face="Arial,Helvetica">The hirarchical structure of groups makes
+it easy to craete modular networks. Here is an example where we make a
+small 3-layer network and encapsulate it in a super-group.</font>
+<ul><tt><font size=+1>AddGroup input my_net.rtdnn</font></tt>
+<br><tt><font size=+1>AddUnit -u5 input my_net.rtdnn</font></tt>
+<br><tt><font size=+1>AddGroup hidden my_net.rtdnn</font></tt>
+<br><tt><font size=+1>AddUnit -u10 hidden my_net.rtdnn</font></tt>
+<br><tt><font size=+1>AddGroup output my_net.rtdnn</font></tt>
+<br><tt><font size=+1>AddUnit -u3 output my_net.rtdnn</font></tt>
+<br><tt><font size=+1>Connect input hidden my_net.rtdnn</font></tt>
+<br><tt><font size=+1>Connect hidden output my_net.rtdnn</font></tt>
+<br><tt><font size=+1>AddGroup 3-layers my_net.rtdnn</font></tt>
+<br><tt><font size=+1>Move input 3-layers my_net.rtdnn</font></tt>
+<br><tt><font size=+1>Move hidden 3-layers my_net.rtdnn</font></tt>
+<br><tt><font size=+1>Move output 3-layers my_net.rtdnn</font></tt></ul>
+<font face="Arial,Helvetica">We now have a module that can perform some
+small task in a bigger network. But to use it we need to connect units
+outside the module to the input-layer and also connect the output-layer
+to outside units for further processing. In a truly modular approach we
+don't want to specify which is the input and output units when we create
+these connections. Therefore groups have a property called <i>protection</i>.
+Groups protected against output connections are "receptor" groups and groups
+protected against input connections are "signal" groups. Groups can also
+be protected against all connections -- "hidden" groups -- but the default
+is "public", i.e., no protection. We can extend the previous examle with:</font>
+<ul><tt><font size=+1>Protect -R 3-layers.input my_net.rtdnn</font></tt>
+<br><tt><font size=+1>Protect -P 3-layers.hidden my_net.rtdnn</font></tt>
+<br><tt><font size=+1>Protect -S 3-layers.output my_net.rtdnn</font></tt></ul>
+<font face="Arial,Helvetica">Here we used the command Protect with the
+options -R, -P and -S for receptor, hidden and signal-group respectively.
+Now, if we should connect from some outside group:</font>
+<ul><tt><font size=+1>Connect SomeGroup 3-layers my_net.rtdnn</font></tt></ul>
+<font face="Arial,Helvetica">only connections to the input group are created,
+and similarly:</font>
+<ul><tt><font size=+1>Connect 3-layers SomeOtherGroup my_net.rtdnn</font></tt></ul>
+<font face="Arial,Helvetica">creates only connections from the output group.</font>
+<p>
+<hr NOSHADE SIZE=3><font size=-2>(C) 1996 Nikko Strom, All rights reserved.</font>
+<br><font size=-2>Permission to use, copy, or modify this documentation
+and the software itself for educational and research purposes only and
+without fee is hereby granted, provided that this copyright and permission
+notice appear on all copies and supporting documentation. For any other
+uses of this software, in original or modified form, including but not
+limited to distribution in whole or in part, specific prior permission
+from the copyright holder must be obtained. The copyright holder makes
+no representations about the suitability of this software for any purpose.
+It is provided "as is" without express or implied warranty.</font>
+</body>
+</html>

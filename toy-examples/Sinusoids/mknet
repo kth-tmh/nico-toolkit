@@ -1,0 +1,28 @@
+#!/bin/sh -v
+
+FEATURESIZE=25
+
+NET=net.rtdnn
+
+CreateNet $NET $NET
+
+AddStream -x data -d /u/nikko/proj/nico/SineExample/data \
+     -F ascii 1 r DATA $NET
+
+AddGroup data $NET
+AddUnit -i -u 1 data $NET
+LinkGroup DATA data $NET
+
+AddStream -x targ -d /u/nikko/proj/nico/SineExample/targ  \
+    -F ascii 4 t TARG $NET
+
+AddGroup targ $NET
+AddUnit -o -u 4 targ $NET
+LinkGroup TARG targ $NET
+
+AddGroup features $NET
+AddUnit -u $FEATURESIZE features $NET
+
+Connect -D -3 3 data features $NET
+Connect -D 1 5 features features $NET
+Connect -D -1 1 features targ $NET

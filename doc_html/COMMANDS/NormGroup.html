@@ -1,0 +1,96 @@
+<HTML>
+
+<BODY BGCOLOR=#ffffff>
+
+
+<CENTER>
+<FONT SIZE=4>
+<FONT SIZE=+1>N<FONT SIZE=-1>AME: NormGroup<BR>
+</CENTER>
+
+<P><FONT SIZE=2>
+
+
+<P>
+<FONT SIZE=+1>S<FONT SIZE=-1>YNOPSIS <P><FONT SIZE=2>
+
+NormGroup [options] Net Input
+
+
+<P>
+<FONT SIZE=+1>D<FONT SIZE=-1>ESCRIPTION<FONT SIZE=+1><P><FONT SIZE=2>
+Normalizes the activities of the units of a group. This command works
+correctly only with linear units and its intended use is to normalize
+activites of units created by transforming the input unit's activations
+(see <A HREF=MakeCep.html>MakeCep</A> and <A HREF=MakeDiff.html>MakeDiff</A>).
+The effect is analogous to that of the <A HREF=NormStream.html>NormStream</A>
+command, but in this case it is the connection weights that are adjusted to
+normalize the activities. Because the transformed activities are often
+treated as the input to the rest of the network and the connections of the
+transformation have plasticity 0.0, it makes sence to normalize them as if
+they where input units. 'Input' is a filename or with the -S option, an
+inputfile script. At least one -g option is necessary because there is no
+default behavior when no units are specified.
+
+<P>
+<FONT SIZE=+1>O<FONT SIZE=-1>PTIONS<P>
+<TABLE>
+
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-S
+</TD>
+<TD><FONT SIZE=2>
+This option changes the interpretation of the argument "Input". With the -S
+option specified, the training data is taken from external files with the
+basenames taken from the rows of the script file "Input". Otherwize "Input"
+is itself a basename. In any case, the streams of the network read/write data
+from files specified by the basename together with the information about file
+extension and directory in each stream 
+(see the <A HREF=../streams.html>Streams</A> section). 
+</TD></TR>
+
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-g group
+</TD>
+<TD><FONT SIZE=2>
+Select the units in 'group' for normalization. Multiple -g options are allowed.
+</TD></TR>
+
+
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-d mult
+</TD>
+<TD><FONT SIZE=2>
+By defalt, NormGroup scans the training-data for the highest and the lowest
+value for each unit's activity. Then it sets up the inflowing connections so
+that these activities are mapped -1 and +1. This
+normalization is obviously sensitive to the extreme values and therefore
+it is sometimes better to use this option that normalizes based on the 
+mean and standard deviation. "mean - mult * stddev" is mapped to -1 and
+"mean + mult * stddev" is mapped to +1.
+</TD></TR>
+
+
+</TABLE>
+
+
+<P>
+<FONT SIZE=+1>S<FONT SIZE=-1>EE
+<FONT SIZE=+1>A<FONT SIZE=-1>LSO<P><FONT SIZE=2>
+
+<A HREF=NormStream.html>NormStream</A>
+
+<HR NOSHADE SIZE=3>
+<FONT SIZE=1>
+(C) 1996 Nikko Strom, All rights reserved.<BR>
+Permission to use, copy, or modify this documentation and the software itself
+for educational and research purposes only and without fee is hereby     
+granted, provided that this copyright and permission notice appear on all
+copies and supporting documentation.  For any other uses of this software,
+in original or modified form, including but not limited to distribution
+in whole or in part, specific prior permission from the copyright holder
+must be obtained. The copyright holder makes no representations about the
+suitability of this software for any purpose. It is provided "as is"
+without express or implied warranty.<BR>
+
+</BODY>

@@ -1,0 +1,32 @@
+#!/bin/sh -v
+
+HIDDENSIZE=10
+
+NET=net.rtdnn.gz
+
+CreateNet $NET $NET
+
+AddStream -x trig -d. -F ascii 1 r TRIG $NET
+
+AddGroup trig $NET
+AddUnit -i -u 1 trig $NET
+LinkGroup TRIG trig $NET
+
+AddStream -x pos -d. -F ascii 2 t POS $NET
+
+AddGroup pos $NET
+AddUnit -o -u 2 pos $NET
+Rename pos#1 x $NET
+Rename pos#2 y $NET
+LinkGroup POS pos $NET
+NormStream -c 0 1 -s POS $NET
+
+AddGroup hidden $NET
+AddUnit -u $HIDDENSIZE hidden $NET
+
+Connect trig hidden $NET
+Connect -D 1 5 hidden hidden $NET
+Connect hidden pos $NET
+
+
+BackProp -p net.log -g1e-2 -E -i400 -d $NET fig8.trig

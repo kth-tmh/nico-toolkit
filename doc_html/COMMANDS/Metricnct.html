@@ -1,0 +1,113 @@
+<HTML>
+
+<BODY BGCOLOR=#ffffff>
+
+
+<FONT SIZE=4>
+<FONT SIZE=+1>N<FONT SIZE=-1>AME: Metricnct
+
+<P><FONT SIZE=2>
+
+
+<P>
+<FONT SIZE=+1>S<FONT SIZE=-1>YNOPSIS:<FONT SIZE=2>
+
+Metricnct [options] FromGroup ToGroup Net
+
+
+<P>
+<FONT SIZE=+1>D<FONT SIZE=-1>ESCRIPTION<FONT SIZE=+1><P><FONT SIZE=2>
+
+Metricnct is used to create connections between two groups with the connectivity
+depending on the "distance" between the two units. The units in each group are
+numbered and the "distance is calculated from the difference in this ordering
+number for pairs of units. The ordering number is normalized for varying number
+of units in the from-group and the to-group, i.e., the distance is zero between the
+last units in the groups, no matter the number of units in the groups. 
+
+<P>
+<FONT SIZE=+1>O<FONT SIZE=-1>PTIONS<P>
+<TABLE>
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-d delay
+</TD>
+<TD><FONT SIZE=2>
+Delays connections "delay" time-units, where "delay" is a positive or negative
+integer. A negative time-delay is a look-ahead. Look-ahead connections are
+allowed in the NICO tolkit as long as no unit's activation depends on the
+same unit's activation at present or future times.
+</TD></TR>
+
+
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-D low high
+</TD>
+<TD><FONT SIZE=2>
+Use this option to create a window of dynamic connections for the "To" units.
+Connections with all time-delays from "low" to "high" are created.
+</TD></TR>
+
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-r bound
+</TD>
+<TD><FONT SIZE=2>
+By default, the connection weights are initialized by a square
+distributed random number R[-0.1;0.1]. This option controls the min. and max.
+values of the distibution (R[-bound;bound]).
+</TD></TR>
+
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-s param
+</TD>
+<TD><FONT SIZE=2>
+This option sets the spread coefficient. It determines how fast the connectivity
+decays as a function of the distance between units. The default value (1.0) is not
+a good choice in many cases. It is recommended to experiment with different values
+to get a reasonable
+number of connections.
+</TD></TR>
+
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-f fraction
+</TD>
+<TD><FONT SIZE=2>
+Set the overall connectivity. The default value of 100 has the effect that the
+connection probability is 100% when the distance is zero. A lower value reduces
+the connection probability proportionally.
+</TD></TR>
+
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-c
+</TD>
+<TD><FONT SIZE=2>
+This option selects a toroid (cyclic) connction metric such that the distance
+between the first and last unit of a group is one, i.e., the same as beween two
+consecutive units.
+</TD></TR>
+
+
+</TABLE>
+
+
+<P>
+<FONT SIZE=+1>S<FONT SIZE=-1>EE<FONT SIZE=+1> 
+<FONT SIZE=+1>A<FONT SIZE=-1>LSO<FONT SIZE=+1><P><FONT SIZE=2>
+
+<A HREF=Pipe.html>Pipe</A>, 
+<A HREF=Connect.html>Connect</A> 
+
+
+<HR NOSHADE SIZE=3>
+<FONT SIZE=1>
+(C) 1996 Nikko Strom, All rights reserved.<BR>
+Permission to use, copy, or modify this documentation and the software itself
+for educational and research purposes only and without fee is hereby     
+granted, provided that this copyright and permission notice appear on all
+copies and supporting documentation.  For any other uses of this software,
+in original or modified form, including but not limited to distribution
+in whole or in part, specific prior permission from the copyright holder
+must be obtained. The copyright holder makes no representations about the
+suitability of this software for any purpose. It is provided "as is"
+without express or implied warranty.<BR>
+
+</BODY>

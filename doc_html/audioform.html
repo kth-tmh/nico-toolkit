@@ -1,0 +1,77 @@
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <META NAME="GENERATOR" CONTENT="Mozilla/4.03 [en] (X11; I; HP-UX B.10.20 9000/780) [Netscape]">
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+<CENTER>
+<H1>
+A<FONT SIZE=+1>UDIO </FONT>F<FONT SIZE=+1>ILE </FONT>F<FONT SIZE=+1>ORMATS</FONT></H1></CENTER>
+
+<HR NOSHADE SIZE=3><FONT SIZE=+0>The NICO toolkit supports the following
+audio formats:</FONT>
+
+<P>&nbsp;
+<TABLE CELLPADDING=5 NOSAVE >
+<TR>
+<TD VALIGN=TOP WIDTH="170"><B>kth&nbsp;</B></TD>
+
+<TD>Short ints, mono, with the KTH "standard" header (1024 bytes long).&nbsp;</TD>
+</TR>
+
+<TR NOSAVE>
+<TD VALIGN=TOP WIDTH="170"><B>cmu</B>&nbsp;</TD>
+
+<TD NOSAVE>Short ints, mono, with the CMU header used in the early versions
+of TIMIT. Writing is not supported.</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="170"><B>au</B>&nbsp;</TD>
+
+<TD>The NeXT/SUN (.au/.snd) audio format. Reading of mono, linear 16 bits,
+and u-law is supported. Writing is not supported.</TD>
+</TR>
+
+<TR>
+<TD><B>wav</B></TD>
+
+<TD>The Windows (.wav) audio format. Reading of mono, linear 16 bits, and
+u-law is supported. Writing is not supported.</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="170"><B>nist</B>&nbsp;</TD>
+
+<TD>Short ints, mono, with the NIST header (1024 bytes long) used in TIMIT.
+Writing is not supported.</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="170"><B>binary</B>&nbsp;</TD>
+
+<TD>Short ints, mono, No header. This format can be customized by vaious
+switches in the different commands. For instance, the length of the header
+can be set by the user. That number of initial bytes will then be skipped.&nbsp;</TD>
+</TR>
+</TABLE>
+
+<HR NOSHADE SIZE=3>
+<BR><SCRIPT LANGUAGE="JavaScript">
+  document.write("Last updated: " + document.lastModified)
+</SCRIPT>
+
+<BR>
+<HR NOSHADE SIZE=3><FONT SIZE=-2>(C) 1996 Nikko Strom, All rights reserved.</FONT>
+<BR><FONT SIZE=-2>Permission to use, copy, or modify this documentation
+and the software itself for educational and research purposes only and
+without fee is hereby granted, provided that this copyright and permission
+notice appear on all copies and supporting documentation. For any other
+uses of this software, in original or modified form, including but not
+limited to distribution in whole or in part, specific prior permission
+from the copyright holder must be obtained. The copyright holder makes
+no representations about the suitability of this software for any purpose.
+It is provided "as is" without express or implied warranty.</FONT>
+</BODY>
+</HTML>

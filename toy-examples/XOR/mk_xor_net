@@ -1,0 +1,30 @@
+#!/bin/sh -v
+
+CreateNet xor xor.rtdnn
+
+AddStream -x input -d . -F ascii 2 r INPUT xor.rtdnn
+AddGroup input xor.rtdnn
+AddUnit -i -u 2 input xor.rtdnn
+LinkGroup INPUT input xor.rtdnn
+
+AddStream -x output -d . -F ascii 1 t OUTPUT xor.rtdnn
+AddGroup output xor.rtdnn
+AddUnit -o -u 1 output xor.rtdnn
+LinkGroup OUTPUT output xor.rtdnn
+
+AddGroup hidden xor.rtdnn
+AddUnit -u 1 hidden xor.rtdnn
+
+Connect input hidden xor.rtdnn
+Connect hidden output xor.rtdnn
+Connect input output xor.rtdnn
+
+Display xor.rtdnn
+
+BackProp -E -g0.1 -i1000 -P xor.log 100 100 xor.rtdnn xor
+
+Excite -X OUTPUT xor.rtdnn xor
+
+cat xor.log
+
+cat xor.act

@@ -1,0 +1,212 @@
+<HTML>
+<HEAD>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<FONT SIZE=+1>N</FONT><FONT SIZE=-1>AME: BackProp</FONT>
+
+<P><FONT SIZE=+1>S</FONT><FONT SIZE=-1>YNOPSIS: BackProp [options] Net
+Input</FONT>
+
+<P><FONT SIZE=+1>D</FONT><FONT SIZE=-1>ESCRIPTION</FONT>
+
+<P><FONT SIZE=-1>&nbsp;The BackProp command is the main training program
+of the NICO toolkit, implementing the standard back-propagation through
+time algorithm with restart and momentum term. The argument "Net" is the
+newtork to be trained and "Input" is either the basename of the datafiles
+used in the simulation (default) or with the -S option "Input" is the name
+of a script file holding one basename per row. <P>
+The options -V, -v, -D and -C, are used to dynamically control the gain
+parameter of the backpropagation training. If a -v or -V option is
+specified, then the validation set is used for the control, otherwise we simply
+use the training set. The -D and -C options specify the scheeme for the gain
+control. 
+</FONT>
+
+<P><FONT SIZE=+1>O</FONT><FONT SIZE=-1>PTIONS</FONT>
+
+<P><FONT SIZE=-1>&nbsp;</FONT>
+<TABLE>
+<TR>
+<TD VALIGN=TOP WIDTH="170"><FONT SIZE=-1>-S</FONT></TD>
+
+<TD><FONT SIZE=-1>This option changes the interpretation of the argument
+"Input". With the -S option specified, the training data is taken from
+external files with the basenames taken from the rows of the script file
+"Input". Otherwize "Input" is itself a basename. In any case, the streams
+of the network read/write data from files specified by the basename together
+with the information about file extension and directory in each stream
+(see the <A HREF="../streams.html">Streams</A> section).&nbsp;</FONT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="170"><FONT SIZE=-1>-s from to&nbsp;</FONT></TD>
+
+<TD><FONT SIZE=-1>Select connections. If No -s option is specified, all
+connections in the network is updated during the back-prop training, but
+if one or more -s options are present, only those connections specified
+by the "from" and "to" arguments are updated. "from" and "to" can be groups
+or units and all connections from all units in or under "from" to all units
+in or under "to" are selected.&nbsp;</FONT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="170"><FONT SIZE=-1>-g gain&nbsp;</FONT></TD>
+
+<TD><FONT SIZE=-1>Gain of the weight updating. The default value of "gain"
+is 1e-3, but the optimal value of this parameter is very task dependendent.&nbsp;</FONT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="170"><FONT SIZE=-1>-m moment&nbsp;</FONT></TD>
+
+<TD><FONT SIZE=-1>Momentum of the weight updating. The default value of
+"moment" is 0.9, but the optimal value of this parameter is task dependendent.&nbsp;</FONT></TD>
+</TR>
+
+<TR>
+<TD><FONT SIZE=-1>-w factor</FONT></TD>
+
+<TD><FONT SIZE=-1>Weight decay factor.&nbsp;</FONT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="170"><FONT SIZE=-1>-f freq&nbsp;</FONT></TD>
+
+<TD><FONT SIZE=-1>The argument "freq" is the updating frequency. It means
+that weights are updated every "freq" time-points. It also means that the
+backpropagation computation of the gradient is restarted every "freq" time-points.
+This introduces a deviation from the true gradient. The default value is
+the maximum time-delay of the network plus one.&nbsp;</FONT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="170"><FONT SIZE=-1>-F min max&nbsp;</FONT></TD>
+
+<TD><FONT SIZE=-1>This option is the same as the -f option except the weight
+updating is done after a random (square distr.) number of frames between
+"min" and "max".&nbsp;</FONT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="170"><FONT SIZE=-1>-E&nbsp;</FONT></TD>
+
+<TD><FONT SIZE=-1>The -E option makes BackProp run in epoch updating mode.
+I.e., weight updating takes place only after all data hve been processed.&nbsp;</FONT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="170"><FONT SIZE=-1>-p file&nbsp;</FONT></TD>
+
+<TD><FONT SIZE=-1>Specify a filename for training progress report. After
+every epoch, statistics about the training is printed to "file". This option
+is useful when big training sessions are run and it is desirable to monitor
+the progress of the training. The network is saved after each epoch, so
+it is possible to terminate a training session and use the network in it's
+current state.&nbsp;</FONT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="170"><FONT SIZE=-1>-.</FONT></TD>
+
+<TD><FONT SIZE=-1>
+Use dots in the progress file to indicate that a bunch of files have been
+processed. This can be useful with large data sets if you would like to get
+some indication that the training is actually progressing inside an epoch.
+</FONT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="170"><FONT SIZE=-1>-P file m n&nbsp;</FONT></TD>
+
+<TD><FONT SIZE=-1>Like the -p option, but here the updating frequency of
+the progress report file and the network file are specified. The "m" argument
+specifies the updating frequency (in epochs) of the progress report and
+the "n" argument specifies the updating frequency (in epochs) of the actual
+network. This could be useful in small experiments where you could run
+a large number of epochs.&nbsp;</FONT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="170"><FONT SIZE=-1>-i N&nbsp;</FONT></TD>
+
+<TD><FONT SIZE=-1>Number of epochs. "N" is the maximum number of epoch
+before termination. The default value is 100.&nbsp;</FONT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="170"><FONT SIZE=-1>-V set stream&nbsp;</FONT></TD>
+
+<TD><FONT SIZE=-1>This option is useful for classification networks. "set"
+is a script file with one basename of datafiles per row. The datafiles
+of this set should be different from the training datafiles specified by
+"Input". The "stream" argument specifies the output classification stream
+with one component for each class. After each epoch, the classification
+performance on this validation set is computed and reported in the progress
+report file. By monitoring this performance during the training, it is
+possible to terminate when the network is starting to "over-learn" the
+training data.&nbsp;</FONT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="170"><FONT SIZE=-1>-v set stream (general case)</FONT></TD>
+
+<TD><FONT SIZE=-1>
+Same as -V above, but in this case we do not assume that the output is of
+the type 1-of-N classification, instead the global error of the validation set
+is used.
+</FONT></TD>
+</TR>
+
+<TR>
+<TD><FONT SIZE=-1>-D decay acc</FONT></TD>
+
+<TD><FONT SIZE=-1>Multiply gain with 'decay' after epochs where the validation
+set's global error is not improved, otherwize multiply by acc. The value of decay
+should be 0-1, and the value of acc should be >1. 
+
+</FONT></TD>
+</TR>
+
+<TR>
+<TD><FONT SIZE=-1>-C decay num</FONT></TD>
+
+<TD><FONT SIZE=-1>Multiply gain with 'decay' after epochs where the validation
+set's global error is not improved, but maximum 'num' times.</FONT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="170"><FONT SIZE=-1>-e error&nbsp;</FONT></TD>
+
+<TD><FONT SIZE=-1>An optional termination criterion can be specified by
+the -e option. When the global error of all training sapmles falls below
+"error" the training is terminated.&nbsp;</FONT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="170"><FONT SIZE=-1>-d&nbsp;</FONT></TD>
+
+<TD><FONT SIZE=-1>By default the set of files needed by all streams, given
+one particular basename are loaded from external memory when they are needed.
+This means that the data needs to be read from disc once every epoch. If
+this is too slow and if the primary memory is big enoug to hold all external
+data, the -d option should be chosen as it forces all external data to
+be read only once and stored in primary memory for fast access.</FONT></TD>
+</TR>
+</TABLE>
+<FONT SIZE=+1>S</FONT><FONT SIZE=-1>EE</FONT><FONT SIZE=+1> A</FONT><FONT SIZE=-1>LSO</FONT>
+
+<P><FONT SIZE=-1>&nbsp;<A HREF="NormStream.html">NormStream</A>, <A HREF="SetPlast.html">SetPlast</A>,
+<A HREF="KickNet.html">KickNet</A></FONT>
+
+<HR NOSHADE SIZE=3><FONT SIZE=-2>(C) 1996 Nikko Strom, All rights reserved.</FONT>
+<BR><FONT SIZE=-2>Permission to use, copy, or modify this documentation
+and the software itself for educational and research purposes only and
+without fee is hereby granted, provided that this copyright and permission
+notice appear on all copies and supporting documentation. For any other
+uses of this software, in original or modified form, including but not
+limited to distribution in whole or in part, specific prior permission
+from the copyright holder must be obtained. The copyright holder makes
+no representations about the suitability of this software for any purpose.
+It is provided "as is" without express or implied warranty.</FONT>
+</BODY>
+</HTML>

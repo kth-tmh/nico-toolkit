@@ -1,0 +1,117 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.7 [en] (WinNT; U) [Netscape]">
+   <title>Connections</title>
+</head>
+<body bgcolor="#FFFFFF">
+
+<center>
+<h1>
+<font size=+2>CONNECTIONS</font></h1></center>
+<font face="Arial,Helvetica">Together with units, the connections are the
+core of a neural network. The activities of the units are computed from
+the activities of other units and the connection weights of the connections
+between units (see the Units section). Basically, a connection is a 3-tuple
+(from_unit, to_unit, weight). The "from_unit" and the "to_unit" are determined
+by the topology of the network and the "weight" is a real number that is
+optimized in the network optimization (or learning) process.</font>
+<p><font face="Arial,Helvetica">The syntax of the command that creates
+connections is:</font>
+<pre><tt><font size=-1>USAGE: Connect [option] From To Net
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Option&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Default
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -d delay&nbsp;&nbsp;&nbsp;&nbsp; Delay connections (or lookahead if negative)&nbsp;&nbsp;&nbsp;&nbsp; (0 delay)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -D from to&nbsp;&nbsp; All delays between 'From' and 'To'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (off)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -r bound&nbsp;&nbsp;&nbsp;&nbsp; Bound on random initialisation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (0.10)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -f&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Full connection, i.e. both ways&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (off)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -w w&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Constant connection (only between single units)&nbsp; (rand)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -s frac&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Sparse conection. 'frac' is % connection prob.&nbsp;&nbsp; (off)</font></tt></pre>
+<font face="Arial,Helvetica">"From" and "To" can be the names of two units.
+Then one connection will be created between those units. But a more common
+and useful use of the Connect command is to connect between two groups.
+For example:</font>
+<ul><tt>Connect my_first_group my_second_group my_net.rtdnn</tt></ul>
+<font face="Arial,Helvetica">will connect all units in the group "my_first_group"
+with all units in the group "my_second_group".</font>
+<p><font face="Arial,Helvetica">The connection weight is by default a square
+distributed random variable. The range of this random initialization variable
+can be changed with the -r option. Also for connections between two named
+units, the weight can be set to a specific value using the -w option.</font>
+<h2>
+Time-delay</h2>
+<font face="Arial,Helvetica">One of the strengts of NICO toolkit is how
+it handles dynamic networks. Connections can be delayed a number of frames
+with the -d option, but also look-ahead connections can be created (by
+specifying a negative delay). It is common to let a unit "see" a window
+of time-delay/look-ahead of other units in the network. This is most easily
+done with the -D option. Here are some examples:</font>
+<p><font face="Arial,Helvetica">Connect from group "input to group "hidden"
+with delay 1:</font>
+<ul><tt>Connect -d1 input hidden my_net.rtdnn</tt></ul>
+<font face="Arial,Helvetica"><font size=-1>&nbsp;</font>Connect from group
+"input to group "hidden" with look-ahead 3:</font>
+<ul><tt>Connect -d-3 input hidden my_net.rtdnn</tt></ul>
+<font face="Arial,Helvetica">Connect from group "input to group "hidden"
+with a window of -3 to +3 frames (creating seven connections between the
+pairs of units):</font>
+<ul><tt>Connect -D -3 3 input hidden my_net.rtdnn</tt></ul>
+<font face="Arial,Helvetica">Of cource, when the the network runs and during
+the back-propagation training there can be no "real" look-ahead connections
+because then it would not be a feed-forward network, but the NICO toolkit
+automatically converts all connections to time-delays when the network
+runs by delaying some of the units. This, however is completely transparent
+to the user. If the user attempts to make commections that would create
+a "zero-time loop" in the network, i.e. add connections so that the activation
+of some unit would depend on itself at the present or future times, the
+conversion to a feed-forward network is impossible and the NICO toolkit
+refuses to add the new connections.</font>
+<h2>
+Plasticity</h2>
+<font face="Arial,Helvetica">Besides their weight, connections have an
+additional property: <i>plasticity</i>. This is a value controlling how
+fast this particular connection should be changed in the learning process.
+By default, all connections have plasticity 1.0, but it can be changed
+with the SetPlast command. Setting the plasticity to 0.0 prevents this
+connection to be altered at all -- higher values increases the learning
+rate. This is practical if you want to train only some part of a big network
+and keep the rest of the network constant. For example, the two commands:</font>
+<ul><tt>SetPlast -w0.0 network network my_net.rtdnn</tt>
+<br><tt>SetPlast -w1.0 bias network my_net.rtdnn</tt></ul>
+<font face="Arial,Helvetica">Forces the network to change only connections
+from the bias unit ("network" is the root group -- all ather groups are
+sub-groups of it, see the Groups section).</font>
+<p><font face="Arial,Helvetica">Besides Connect, the following commands
+can be used to create connections:</font>
+<ul><tt>Pipe, MakeCep, MakeDiff</tt></ul>
+
+<h2>
+Sparse Connectivity</h2>
+<font face="Arial,Helvetica">The toolkit has some powerful tools for sparse
+connectivity. When you connect the units in one group to another, you can
+choose to randomly create only a fraction of the connections.&nbsp; The
+-s option of the Connect command does this basic sparse connection. You
+can also connect units in the groups with varying probability depending
+on their 'distance' from each other with the command Metricnct. The 'distance
+is simply based on the ordering of the units in their respective groups,
+e.g., unit #5 of group1 and unit #21 of group2 have a 'distance' of 16.</font>
+<h2>
+Pruning</h2>
+<font face="Arial,Helvetica">The command Prune can be used to reduce the
+number of connections in a trained network by removing connections with
+small weights or alternatively, both small weight and small gradient over
+a trining set. This can be used to dramatically reduce the size and runtime
+of trained networks.</font>
+<br>
+<hr NOSHADE SIZE=3><font size=-2>(C) 1996 Nikko Strom, All rights reserved.</font>
+<br><font size=-2>Permission to use, copy, or modify this documentation
+and the software itself for educational and research purposes only and
+without fee is hereby granted, provided that this copyright and permission
+notice appear on all copies and supporting documentation. For any other
+uses of this software, in original or modified form, including but not
+limited to distribution in whole or in part, specific prior permission
+from the copyright holder must be obtained. The copyright holder makes
+no representations about the suitability of this software for any purpose.
+It is provided "as is" without express or implied warranty.</font>
+</body>
+</html>

@@ -1,0 +1,17 @@
+CreateNet simpletimit.rtdnn simpletimit.rtdnn 
+
+AddStream -x mfcc -d mfcc -Fbinary 13 r CEP simpletimit.rtdnn 
+AddGroup cep simpletimit.rtdnn 
+AddUnit -i -u 13 cep simpletimit.rtdnn 
+LinkGroup CEP cep simpletimit.rtdnn 
+
+AddStream -x targ -d phntarg -Fcodebook -S phoneme_set 61 t PHONEME simpletimit.rtdnn 
+AddGroup phoneme simpletimit.rtdnn 
+AddUnit -o -S phoneme_set phoneme simpletimit.rtdnn 
+LinkGroup PHONEME phoneme simpletimit.rtdnn 
+SetType -O cross phoneme simpletimit.rtdnn 
+
+AddGroup features simpletimit.rtdnn 
+AddUnit -u 100 features simpletimit.rtdnn 
+Connect -D -3 3 cep features simpletimit.rtdnn 
+Connect -D -1 1 features phoneme simpletimit.rtdnn 

@@ -1,0 +1,101 @@
+<HTML>
+
+<BODY BGCOLOR=#ffffff>
+
+
+<CENTER>
+<FONT SIZE=4>
+<FONT SIZE=+1>N<FONT SIZE=-1>AME: MakeCep<BR>
+</CENTER>
+
+<P><FONT SIZE=2>
+
+<P>
+<FONT SIZE=+1>S<FONT SIZE=-1>YNOPSIS <P><FONT SIZE=2>
+
+MakeCep [options] Group CepGroup Net
+
+
+<P>
+<FONT SIZE=+1>D<FONT SIZE=-1>ESCRIPTION<P><FONT SIZE=2>
+
+Creates a new group 'CepGroup' with a number of hidden units,
+and connects them in such a way that the activities of the new units are
+a cosine transform of the activities of the old units. The intended use
+is for transforming a filterbank input representation of speech to its
+cepstrum coefficients. The created units are linear and the connections
+have plasticity 0.0.
+<P>
+
+<FONT SIZE=+1>O<FONT SIZE=-1>PTIONS<P>
+<TABLE>
+
+<TR>
+<TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-n num
+<TD><FONT SIZE=2>
+Specifies the number of cepstrum coefficients. The default is the same as
+the number of units in the original group 'Group'.
+</TD>
+</TR>
+
+<TR>
+<TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-e f
+<TD><FONT SIZE=2>
+Multiplies the zeroth cepstrum coefficient with the number f. 
+</TD>
+</TR>
+
+<TR>
+<TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-s f
+<TD><FONT SIZE=2>
+Multiplies the non-zeroth cepstrum coefficients with the number f. 
+</TD>
+</TR>
+
+<TR>
+<TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-0 
+<TD><FONT SIZE=2>
+Remove the zeroth cepstrum coefficient.
+</TD>
+</TR>
+
+<TR>
+<TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-p plast
+<TD><FONT SIZE=2>
+Set plastictity of created connections. The default plasticity is 0.0, which
+is different from the normal default 1.0.
+</TD>
+</TR>
+
+
+</TABLE>
+
+
+<P>
+<FONT SIZE=+1>S<FONT SIZE=-1>EE
+<FONT SIZE=+1>A<FONT SIZE=-1>LSO<P><FONT SIZE=2>
+
+<A HREF=MakeDiff.html>MakeDiff</A>,
+<A HREF=NormGroup.html>NormGroup</A>
+<A HREF=Pipe.html>Pipe</A>,
+<A HREF=Connect.html>Connect</A>
+
+<HR NOSHADE SIZE=3>
+<FONT SIZE=1>
+(C) 1996 Nikko Strom, All rights reserved.<BR>
+Permission to use, copy, or modify this documentation and the software itself
+for educational and research purposes only and without fee is hereby     
+granted, provided that this copyright and permission notice appear on all
+copies and supporting documentation.  For any other uses of this software,
+in original or modified form, including but not limited to distribution
+in whole or in part, specific prior permission from the copyright holder
+must be obtained. The copyright holder makes no representations about the
+suitability of this software for any purpose. It is provided "as is"
+without express or implied warranty.<BR>
+
+</BODY>
