@@ -1,0 +1,159 @@
+<html>
+<head>
+   <title>Streams</title>
+</head>
+<body bgcolor="#FFFFFF">
+
+<center>
+<h1>
+<font size=+2>STREAMS</font></h1></center>
+<font face="Arial,Helvetica">The network's communicatinon with external
+data is performaed by <i>streams</i>. The following is the syntax of the
+command that creates a new stream in a network:</font>
+<pre><font size=-1>USAGE: AddStream [options] Size Mode Name Net
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Mode ::=&nbsp; r | w | t | i | 0
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (read, write, target, interactive or no-action)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Option&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Default
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -x&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Specify file extension&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (data)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -d&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Specify default directory&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (.)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -f filter&nbsp; Data will be piped through 'filter'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (off)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -F format&nbsp; Specify file format (ascii, binary, htk etc.)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (binary)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -S file&nbsp;&nbsp;&nbsp; Load component names from rows of 'file'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (unnamed)</font></pre>
+<font face="Arial,Helvetica">Streams are responsible for reading and writing
+data from files and converting the data to vectors of real numbers in a
+range suitable for unit activations in the network. Therefore each stream
+must know if it should read or write data, which fileformat to read/write
+and where to look for files.</font>
+<p><font face="Arial,Helvetica">It is possible to alter an already created
+stream's mode, data-directory, format and extension and the component's
+names using the command <i>EditStream</i>. This is particularly practical
+when you wish to run a network on new datafiles, possibly in a new directory
+and with a different format.</font>
+<p><font face="Arial,Helvetica">The file format of the external data can
+be specified using the -F option. The complete set of supported file formats
+is described in the Reference section <a href="fileform.html">File
+formats</a>. The default format is "binary", a very simple format: no header,
+float vectors are written binary as they are represented by the paricular
+operating system used.</font>
+<h2>
+File name convention</h2>
+<font face="Arial,Helvetica">By convention, all datafiles must have the
+same base filename at each time. For example, a network may read its input
+from a file called "data4711.input" in one stream and its targets for backprop
+training from another file called "data4711.targets". But it's NOT possble
+to use "input.data" and "output.data". This convention makes it possible
+to handle multiple streams in a network by specifyng, for each stream,
+the directory and filename extension for this particular stream. This is
+done with the -d and -x options. Many different training, testing and evaluation
+runs can then be simulated by having different base names for the files
+in different simulations.</font>
+<h2>
+File mode</h2>
+<font face="Arial,Helvetica">The <i>mode</i> of the stream determines how
+the data should be handled. For training a network, at least one stream
+with mode "target" is necessary. In most cases the network also needs input
+streams of type: "read". The other types: "write", "interactive" and "no-action",
+are less common. In fact, "write" is currently not implemented and "interactive"
+is only an internal mode in some experimental commands. "no-action" can
+be used to turn off a stream without removing it from the network.</font>
+<h2>
+Example</h2>
+<font face="Arial,Helvetica">Here is an example where we add one input
+stream to a network:</font>
+<ul><tt>CreateNet my_net my_net.rtdnn</tt>
+<br><tt>AddStream 7 r INPUT my_net.rtdnn</tt></ul>
+<font face="Arial,Helvetica">Now let's assume that the network somehow
+detects five colors from its input (don't care about why or how). Let's
+say that we want to detect: green, blue red, magenta, and yellow. Create
+a file called for example "colors.list" with one row for each name like
+this:</font>
+<ul><tt>green</tt>
+<br><tt>blue</tt>
+<br><tt>red</tt>
+<br><tt>magenta</tt>
+<br><tt>yellow</tt></ul>
+<font face="Arial,Helvetica">Now we can add a target stream by:</font>
+<ul><tt>AddStream -S colors.list 5 t COLORS my_net.rtdnn</tt></ul>
+<font face="Arial,Helvetica"><font size=-1>&nbsp;</font>The -S option reads
+the file of component names for the stream. Now run this command:</font>
+<ul><tt>Display -X2 -s my_net.rtdnn</tt></ul>
+<font face="Arial,Helvetica">&nbsp;Information about the two streams is
+printed. If you type:</font>
+<ul><tt>Display -o COLORS -X2 my_net.rtdnn</tt></ul>
+<font face="Arial,Helvetica">Only information about the output stream is
+printed. It should appear like this:</font>
+<pre><font size=+0>Stream&nbsp;&nbsp;&nbsp;&nbsp; :&nbsp; COLORS
+&nbsp; size&nbsp;&nbsp;&nbsp;&nbsp; :&nbsp;&nbsp;&nbsp;&nbsp; 5
+&nbsp; path&nbsp;&nbsp;&nbsp;&nbsp; :&nbsp; .
+&nbsp; extension:&nbsp; data
+&nbsp; format&nbsp;&nbsp; :&nbsp; binary
+&nbsp; mode&nbsp;&nbsp;&nbsp;&nbsp; :&nbsp; target (t)
+Names&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; B
+green&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.000000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.500000
+blue&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.000000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.500000
+red&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.000000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.500000
+magenta&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.000000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.500000
+yellow&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.000000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.500000</font></pre>
+<font face="Arial,Helvetica">For each component of the stream, the name
+is printed and then there are two columns with the parameters of the linear
+transformation between the internal activation values and the values of
+the external data.</font>
+<h2>
+Data transformation</h2>
+<font face="Arial,Helvetica">Internal values are computed by the formula:
+<i>x
+/ b - a</i>, where <i>x</i> is the external value and <i>a</i> and
+<i>b</i>
+are the parameters of the linear transformation. Theses are the parameters
+that were printed in the example above. The output stream of the example
+has the default transformation from the range [-1; 1] (which is the range
+of tanhyp units) to the range [0; 1] which is the desired range if we want
+to estimate probabilities. In this case, the values in the target files
+should be in the range [0; 1]. Now look at the input stream:</font>
+<ul><tt>Display -X2 -oINPUT my_net.rtdnn</tt></ul>
+
+<pre>Stream&nbsp;&nbsp;&nbsp;&nbsp; :&nbsp; INPUT
+&nbsp; size&nbsp;&nbsp;&nbsp;&nbsp; :&nbsp;&nbsp;&nbsp;&nbsp; 7
+&nbsp; path&nbsp;&nbsp;&nbsp;&nbsp; :&nbsp; .
+&nbsp; extension:&nbsp; data
+&nbsp; format&nbsp;&nbsp; :&nbsp; binary
+&nbsp; mode&nbsp;&nbsp;&nbsp;&nbsp; :&nbsp; read (r)
+&nbsp;&nbsp;&nbsp;&nbsp; A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; B
+&nbsp;&nbsp;&nbsp;&nbsp; 0.000000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.000000
+&nbsp;&nbsp;&nbsp;&nbsp; 0.000000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.000000
+&nbsp;&nbsp;&nbsp;&nbsp; 0.000000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.000000
+&nbsp;&nbsp;&nbsp;&nbsp; 0.000000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.000000
+&nbsp;&nbsp;&nbsp;&nbsp; 0.000000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.000000
+&nbsp;&nbsp;&nbsp;&nbsp; 0.000000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.000000
+&nbsp;&nbsp;&nbsp;&nbsp; 0.000000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.000000</pre>
+<font face="Arial,Helvetica">We see that the components are unnamed and
+the linear transformation is the identity mapping, this is the default
+for input streams. However, often the data in the external files is not
+well suited for directly using it as unit activations. Therefore it is
+common practice to linearly transform the input to values roughly in the
+range [-1; 1]. This is done with the command <i>NormStream</i> and is described
+more in the <a href="training.html">Training
+section.</a></font>
+<h2>
+Linking streams to groups and units</h2>
+<font face="Arial,Helvetica">The transformed values of the input stream
+components can be copied to input units of the network and transformed
+values of the target stream can be imposed on output units. This is called
+to link units to a stream. The easiest way to do this is to link the units
+of a group to a stream with the command <i>LinkGroup</i>. The number of
+units in the group must equal the number of components in the stream. Here
+is an example, extending our previous "color- network":</font>
+<ul><tt>AddGroup input my_net.rtdnn</tt>
+<br><tt>AddUnit -i -u7 input my_net.rtdnn</tt>
+<br><tt>LinkGroup input INPUT my_net.rtdnn</tt>
+<br><tt>AddGroup colors my_net.rtdnn</tt>
+<br><tt>AddUnit -o -Scolors.list colors my_net.rtdnn</tt>
+<br><tt>LinkGroup colors COLORS my_net.rtdnn</tt></ul>
+<font face="Arial,Helvetica">It is a good convention to name groups linked
+to a stream to the same name but let the stream have capital letters as
+in this example.</font>
+<p><font face="Arial,Helvetica"><i>LinkUnit</i> is a more low-level command
+to link one unit to a specified component of a stream.</font>
+
+</body>
+</html>

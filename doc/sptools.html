@@ -1,0 +1,76 @@
+<html>
+<head>
+   <title>Speech Tools</title>
+</head>
+<body bgcolor="#FFFFFF">
+
+<center>
+<h1>
+<font size=+2>SPEECH TOOLS</font></h1></center>
+<font face="Arial,Helvetica">The NICO toolkit was developed for automatic
+speech recognition problems and therefore special commands are available
+for speech input and output. The set of tools available is not a full tool-kit
+for speech processing but it is enough to start experimenting. It's possible
+to extract filterbank features (mel or bark scaled), compute cepstrum features
+and velocity and acceleration coefficients. A tool for creating targets
+for phoneme clasifiers from phonetic label files and a simple label file
+editor are also available.</font>
+<p><font face="Arial,Helvetica">In phonetic classification expreriments,
+you have an output group of N output units -- one unit for each phoneme.
+The output unit with the highest activation at each time point is the network's
+phonetic classification.</font>
+<p><font face="Arial,Helvetica">The phonetic targets are typically specified
+in "label files" -- file formats that are not directly supported by NICO
+streams. This is text files with basically one phoneme per row. Start and
+end times for the phonemes are also given. See the reference section <a href="fileform.html">File
+formats</a> for more details.</font>
+<h2>
+Creating phonetic target files</h2>
+<font face="Arial,Helvetica">The command <a href="COMMANDS/Lab2Targ.html">Lab2Targ</a>
+converts label files to a file format that can be read by a stream in a
+network. This is the syntax for Lab2Targ:</font>
+<ul><tt>&nbsp;<i>USAGE: Lab2Targ [options] LabelListFile InputSize InputFile</i></tt></ul>
+<font face="Arial,Helvetica">"LabelListFile" is a list of the phonemes
+to discriminate, so the number of target values per frame is equal to the
+number of rows in "LabelListFile" . The program also needs to know the
+number of samples for each utterance, therefore you need to give the datafile
+of one arbitrary other stream of the network (for example an input stream)
+and the size of this stream. That's the arguments "InputSize" and "InputFile".
+Following the general convention of the toolkit, all data files for the
+same utterance have the same basename so the filename of the created target
+file is constructed from "InputFile". The directories and extensions of
+the input file, label file and outputted target file can be specified with
+various options (see the manual page for <a href="COMMANDS/Lab2Targ.html">Lab2Targ</a>).</font>
+<p><font face="Arial,Helvetica"><a href="COMMANDS/Lab2Targ.html">Lab2Targ</a>
+can read severeal different label file formats and write different target
+file formats. File formats are described in more detail in the Reference
+section <a href="fileform.html">File
+formats</a>.</font>
+<h2>
+Creating input feature files</h2>
+<font face="Arial,Helvetica">Input features are computed with the <a href="COMMANDS/Barkfib.html">Barkfib</a>
+command:</font>
+<ul>&nbsp;<i><tt>USAGE: Barkfib [options] audiofile</tt></i></ul>
+<font face="Arial,Helvetica">Barkfib cen extract: mel, bark or linearly
+spaced filterbank features and do some standard preprocessing, such as
+pre-emphasis. It also computes cepstrum features from the filterbank and
+the energy coefficient on demand. Melfib can read several different audio
+file formats, see the <a href="MANUAL/fileform.html">File
+formats</a> section for details. The created datafiles gets the same base
+names as the audio files, but the file extension and output directory can
+be specified by command switches. See the manual page for <a href="COMMANDS/Barkfib.html">Barkfib</a>
+for more details.</font>
+<p><font face="Arial,Helvetica">The command <a href="COMMANDS/MakeCep.html">MakeCep</a>
+can be used to create a cepstrum representation from the filterbank input.
+This is done by adding a layer of hidden linear units to the network and
+connect them with the appropriate weights. Similarly, <a href="COMMANDS/MakeDiff.html">MakeDiff</a>
+creates a group of units computing the first order derivative of another
+group by adding a new hidden layer and connect it to the old lauer with
+time-delay and look-ahead connections. Thus, by combining MakeCep and MakeDiff,
+the popular cepstrum + velocity and acceleration can be created.</font>
+<p><font face="Arial,Helvetica">In the <a href="speechex.html">Speech
+Example</a> we put all the pieces discussed above together in a phonetic
+classification experiment.</font>
+
+</body>
+</html>

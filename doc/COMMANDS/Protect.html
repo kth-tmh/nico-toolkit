@@ -1,0 +1,83 @@
+<HTML>
+
+<BODY BGCOLOR=#ffffff>
+
+
+<FONT SIZE=4>
+<FONT SIZE=+1>N<FONT SIZE=-1>AME: Protect
+
+<P><FONT SIZE=2>
+
+
+<P>
+<FONT SIZE=+1>S<FONT SIZE=-1>YNOPSIS:<FONT SIZE=2>
+
+Protect [options] Group Net
+
+
+<P>
+<FONT SIZE=+1>D<FONT SIZE=-1>ESCRIPTION<P><FONT SIZE=2>
+
+This command is used to set the protect-attribute of groups. It controls
+which connctions from and to groups are allowed (see the section
+on groups in this manual). <I>Protect</I> has no effect if no options are
+specified. This is not a recursive command, so even if 'Group' has sub-groups,
+only the attribute of group itself is altered. However, the attributes are
+inherited as illustrated by the following examaple:<P>
+
+<LI>AddGroup SuperGroup my_net.rtdnn<BR> 
+<LI>AddGroup SubGroup my_net.rtdnn<BR> 
+<LI>AddUnit -u 5 SubGroup my_net.rtdnn<BR> 
+<LI>Move SubGroup network SuperGroup my_net.rtdnn<BR> 
+<LI>Protect -P SuperGroup my_net.rtdnn<P>
+Now "SuperGroup" is protected against all conncetions to or from it, but
+"SubGroup" is not protected at all. Still, the following command does not
+create any new connections:<P>
+<LI>Connect SomeGroup SuperGroup my_net.rtdnn<P> 
+because the supergroup blocks the <I>Conncet</I> command. On the other hand,
+the command:<P>
+<LI>Connect SomeGroup SubGroup my_net.rtdnn<P>
+creates new connections because the attribute is not copied to the subgroup. 
+
+
+<P>
+<FONT SIZE=+1>O<FONT SIZE=-1>PTIONS<P>
+<TABLE>
+
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-P        
+<TD><FONT SIZE=2>
+Change 'Group' to a "protected" group. This means that no furter connections
+are allwed to or from this group.
+</TD></TR>
+
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-R        
+<TD><FONT SIZE=2>
+Change 'Group' to a "reception" group. This means that only connections
+<I>to</I> the group are allowed.
+</TD></TR>
+
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-S        
+<TD><FONT SIZE=2>
+Change 'Group' to a "signal" group. This means that only connections
+<I>from</I> the group are allowed.
+</TD></TR>
+
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-0        
+<TD><FONT SIZE=2>
+Change 'Group' to a "public" group. This turns off all protection and
+is the default.
+</TD></TR>
+
+</TABLE>
+
+<P>
+<FONT SIZE=+1>S<FONT SIZE=-1>EE 
+<FONT SIZE=+1>A<FONT SIZE=-1>LSO<P><FONT SIZE=2>
+
+<A HREF=AddGroup.html>AddGroup</A> 
+
+</BODY>

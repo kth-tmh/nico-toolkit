@@ -1,0 +1,188 @@
+<HTML>
+<HEAD>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+<CENTER><FONT SIZE=+1>N</FONT><FONT SIZE=-1>AME: Melfib</FONT></CENTER>
+
+
+<P><FONT COLOR="#CC0000">THIS COMMAND IS DEPRECATED AND HAS BEEN REPLACED BY THE <A HREF="Barkfib.html">Barkfib
+</A>COMMAND.<BR>
+USE THIS NEW COMMAND UNLESS YOU HAVE STRONG REASONS NOT TO DO SO.</FONT><FONT COLOR="#CC0000"></FONT>
+
+<P><FONT SIZE=+1>S</FONT><FONT SIZE=-1>YNOPSIS: Melfib [options] audiofile</FONT>
+
+<P><FONT SIZE=+1>D</FONT><FONT SIZE=-1>ESCRIPTION</FONT>
+
+<P><FONT SIZE=-1>Extract filterbank features from an audio file. Mel, bark
+or linear scaling can be chosen. The filters are implemented using triangular
+windows on the short-time FFT amplitude spectrum.</FONT>
+
+<P><FONT SIZE=+1>O</FONT><FONT SIZE=-1>PTIONS</FONT>
+
+<P><FONT SIZE=-1>&nbsp;</FONT>
+<TABLE>
+<TR>
+<TD VALIGN=TOP WIDTH="170"><FONT SIZE=-1>-S&nbsp;</FONT></TD>
+
+<TD><FONT SIZE=-1>This option changes the interpretation of the argument
+"audiofile". With the -S option specified, the audio data is taken from
+files from the rows of the script file "audiofile". Otherwize "audiofile"
+is itself a filename.&nbsp;</FONT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="170"><FONT SIZE=-1>-T level&nbsp;</FONT></TD>
+
+<TD><FONT SIZE=-1>Level of output printed to stdout. 'level' is 1, 2 or
+3 and the default is 0.&nbsp;</FONT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="170"><FONT SIZE=-1>-F format&nbsp;</FONT></TD>
+
+<TD><FONT SIZE=-1>Specifies audio file format. See the <A HREF="../fileform.html">Streams</A>
+reference section for a list of audio file formats.&nbsp;</FONT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="170"><FONT SIZE=-1>-x ext&nbsp;</FONT></TD>
+
+<TD><FONT SIZE=-1>Sets the file extension for output feature files. The
+default extension is: "fib".&nbsp;</FONT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="170"><FONT SIZE=-1>-d ext&nbsp;</FONT></TD>
+
+<TD><FONT SIZE=-1>Sets the directory for output feature files. The default
+is the current directory.&nbsp;</FONT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="170"><FONT SIZE=-1>-q ext&nbsp;</FONT></TD>
+
+<TD><FONT SIZE=-1>Specifies the file extension of input files (no default
+value).&nbsp;</FONT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="170"><FONT SIZE=-1>-p dir&nbsp;</FONT></TD>
+
+<TD><FONT SIZE=-1>Specifies the directory of input files (no default value).&nbsp;</FONT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="170"><FONT SIZE=-1>-O format&nbsp;</FONT></TD>
+
+<TD><FONT SIZE=-1>Sets the output file format of the extracted parameter
+files. The default format is "binary". See the <A HREF="../fileform.html">Streams</A>
+reference section for a list of parameter file formats.&nbsp;</FONT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="170"><FONT SIZE=-1>-c N&nbsp;</FONT></TD>
+
+<TD><FONT SIZE=-1>Output cepstrum coefficients instead of the filterbank
+activities. The default is to start with the 1<SUP>st</SUP> cepstrum coefficient.
+But the zeroth coefficient can be outputted if the -0 option is specified.&nbsp;</FONT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="170"><FONT SIZE=-1>-0&nbsp;</FONT></TD>
+
+<TD><FONT SIZE=-1>Include the 0<SUP>th</SUP> cepstrum coefficient. This
+option can only be used together with the -c option.&nbsp;</FONT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="170"><FONT SIZE=-1>-L lift&nbsp;</FONT></TD>
+
+<TD><FONT SIZE=-1>Apply cepstrum liftering to the cepstrum coefficients
+with lifting parameter 'lift'. effective only together with the -c option.&nbsp;</FONT></TD>
+</TR>
+</TABLE>
+<FONT SIZE=-1>Options specifying the filterbank characteristics</FONT>
+<TABLE>
+<TR>
+<TD VALIGN=TOP WIDTH="170"><FONT SIZE=-1>-E&nbsp;</FONT></TD>
+
+<TD><FONT SIZE=-1>Add log energy as the last parameter of the feature vector.&nbsp;</FONT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="170"><FONT SIZE=-1>-n num_filters&nbsp;</FONT></TD>
+
+<TD><FONT SIZE=-1>Specifies the number of filters. The default is 16.&nbsp;</FONT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="170"><FONT SIZE=-1>-t type&nbsp;</FONT></TD>
+
+<TD><FONT SIZE=-1>Specifies the frequency scale. 'type' is "lin", "mel"
+or "bark". The default is "mel".&nbsp;</FONT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="170"><FONT SIZE=-1>-R c f&nbsp;</FONT></TD>
+
+<TD><FONT SIZE=-1>Specifies the lower and upper cut frequencies of the
+filterbank. The default is 0-8000 Hz, i.e., 'c' = 0 and 'f' = 8000 .&nbsp;</FONT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="170"><FONT SIZE=-1>-e c&nbsp;</FONT></TD>
+
+<TD><FONT SIZE=-1>Apply pre emphasis to the input speech data with coefficient
+'c'. The default is c=0.97.&nbsp;</FONT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="170"><FONT SIZE=-1>-l length&nbsp;</FONT></TD>
+
+<TD><FONT SIZE=-1>Set frame length in ms. The default is 10 ms.&nbsp;</FONT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="170"><FONT SIZE=-1>-w length&nbsp;</FONT></TD>
+
+<TD><FONT SIZE=-1>Set analyze window length in ms. By experience we know
+that this length should be longer than the frame length. The default is
+25 ms.&nbsp;</FONT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="170"><FONT SIZE=-1>-o offset&nbsp;</FONT></TD>
+
+<TD><FONT SIZE=-1>Shift the input 'offset' samples. This means that each
+frame starts 'offset' samples from its normal start sample.&nbsp;</FONT></TD>
+</TR>
+</TABLE>
+<FONT SIZE=-1>Options used to complement/override the file header information</FONT>
+<TABLE>
+<TR>
+<TD VALIGN=TOP WIDTH="170"><FONT SIZE=-1>-h size&nbsp;</FONT></TD>
+
+<TD><FONT SIZE=-1>Specifies the size of the audio file header.&nbsp;</FONT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="170"><FONT SIZE=-1>-f samp_freq&nbsp;</FONT></TD>
+
+<TD><FONT SIZE=-1>Specify the sample frequency of the input audio data.
+The default is 16kHz if not specified in the file header.&nbsp;</FONT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="170"><FONT SIZE=-1>-b&nbsp;</FONT></TD>
+
+<TD><FONT SIZE=-1>Swap the byte order of the input data.&nbsp;</FONT></TD>
+</TR>
+</TABLE>
+<FONT SIZE=+1>S</FONT><FONT SIZE=-1>EE </FONT><FONT SIZE=+1>A</FONT><FONT SIZE=-1>LSO</FONT>
+
+<P><FONT SIZE=-1>&nbsp;<A HREF="Cepitch.html">Cepitch,</A> <A HREF="MakeCep.html">MakeCep,</A>
+<A HREF="MakeDiff.html">MakeDiff</A></FONT>
+
+</BODY>
+</HTML>

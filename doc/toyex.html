@@ -1,0 +1,2035 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.7 [en] (WinNT; U) [Netscape]">
+   <title>Toy Examples</title>
+</head>
+<body bgcolor="#FFFFFF">
+
+<center>
+<h1>
+<font size=+2>SOME TOY EXAMPLES</font></h1></center>
+<font face="Arial,Helvetica">Scripts and data for the toy examples can
+be found in the directory <i>toy_examples</i> of the NICO distribution.</font>
+<h2>
+Contents</h2>
+
+<ul>
+<h3>
+<b><font face="Arial,Helvetica"><a href="#XOR">The XOR problem</a></font></b></h3>
+<font face="Arial,Helvetica">This classical problem serves as an introduction
+to the basic commands of the toolkit. Don't expect a particularly efficient
+solution, the NICO toolkit is not really meant to be used for this type
+of simple problems.</font>
+<h3>
+<b><font face="Arial,Helvetica"><a href="#SINUSOIDS">Classifying sinusoids</a></font></b></h3>
+<font face="Arial,Helvetica">This example shows how dynamic ANNs can learn
+to classify input sequences. I created this example after a discussion
+on the newsgroup comp.ai.neural-nets, where the issue was whether this
+type of problem could be solved using artificial neural networks.</font>
+<h3>
+<b><font face="Arial,Helvetica"><a href="#FIGURE8">The figure 8</a></font></b></h3>
+<font face="Arial,Helvetica">This small example serves as a demonstration
+of how dynamic ANNs can learn to output complex dynamic output patterns
+with only a short trigger signal on the input.</font></ul>
+
+<h2>
+
+<hr NOSHADE SIZE=3><a NAME="XOR"></a>The XOR problem.</h2>
+<font face="Arial,Helvetica">This is known to be one of the simplest problems
+that are not linearly separable, i.e., need at least one hidden unit. The
+files <b>xor.input</b> and <b>xor.output</b> printed below defines the
+problem.</font>
+<p><font face="Arial,Helvetica">Create a directory for this little experiment
+and create also the two files defining the input and output.</font>
+<br>&nbsp;
+<table CELLSPACING=0 CELLPADDING=20 >
+<tr VALIGN=TOP>
+<td><i>File: xor.input</i>
+<table BORDER CELLSPACING=0 CELLPADDING=10 WIDTH="100%" BGCOLOR="#F5F5DC" >
+<tr>
+<td><tt>1 0</tt>
+<br><tt>1 1</tt>
+<br><tt>0 1</tt>
+<br><tt>0 0</tt></td>
+</tr>
+</table>
+&nbsp;</td>
+
+<td><i>File: xor.output</i>
+<table BORDER CELLSPACING=0 CELLPADDING=10 WIDTH="100%" BGCOLOR="#F5F5DC" >
+<tr>
+<td><tt>1</tt>
+<br><tt>0</tt>
+<br><tt>1</tt>
+<br><tt>0</tt></td>
+</tr>
+</table>
+&nbsp;</td>
+</tr>
+</table>
+<font face="Arial,Helvetica">Now type in (or copy and paste it from here)
+the script below. It builds an ANN, trains it and evaluates it. The network
+has one hidden unit and the output unit is connected both to the hidden
+unit and the two input units. At the end of the script, the values of the
+output stream is printed for the four patterns. If the network solved the
+problem, the values should be close to 1, 0, 1, 0. If one runs this script
+repeated times, it is seen that the training does not always converge.
+I found that this happens about once every three or four times.</font>
+<br>&nbsp;
+<table BORDER CELLSPACING=0 CELLPADDING=10 BGCOLOR="#FFF8DC" >
+<tr>
+<td><tt>#!/bin/sh -v</tt>
+<p><tt>CreateNet xor xor.rtdnn&nbsp;</tt>
+<p><tt>AddStream -x input -d . -F ascii 2 r INPUT xor.rtdnn&nbsp;</tt>
+<br><tt>AddGroup input xor.rtdnn&nbsp;</tt>
+<br><tt>AddUnit -i -u 2 input xor.rtdnn&nbsp;</tt>
+<br><tt>LinkGroup INPUT input xor.rtdnn&nbsp;</tt>
+<p><tt>AddStream -x output -d . -F ascii 1 t OUTPUT xor.rtdnn&nbsp;</tt>
+<br><tt>AddGroup output xor.rtdnn&nbsp;</tt>
+<br><tt>AddUnit -o -u 1 output xor.rtdnn&nbsp;</tt>
+<br><tt>LinkGroup OUTPUT output xor.rtdnn&nbsp;</tt>
+<p><tt>AddGroup hidden xor.rtdnn&nbsp;</tt>
+<br><tt>AddUnit -u 1 hidden xor.rtdnn&nbsp;</tt>
+<p><tt>Connect input hidden xor.rtdnn&nbsp;</tt>
+<br><tt>Connect hidden output xor.rtdnn&nbsp;</tt>
+<br><tt>Connect input output xor.rtdnn&nbsp;</tt>
+<p><tt>Display xor.rtdnn&nbsp;</tt>
+<p><tt>BackProp -E -g0.1 -i1000 -P xor.log 100 100 xor.rtdnn xor&nbsp;</tt>
+<p><tt>Excite -X OUTPUT xor.rtdnn xor&nbsp;</tt>
+<p><tt>cat xor.log&nbsp;</tt>
+<p><tt>cat xor.act&nbsp;</tt></td>
+</tr>
+</table>
+
+<hr NOSHADE SIZE=3>
+<h2>
+<a NAME="SINUSOIDS"></a></h2>
+<img SRC="sinusoids.gif" height=102 width=707>
+<br><i>Plot of the four sinusoids to classify in this example.</i>
+<h2>
+Classifying sinusoids</h2>
+<font face="Arial,Helvetica">Here is a simple example of how dynamic networks
+can learn to classify sequences. The input to the network is a sine wave,
+and the task is to discriminate between four distinct frequencies. Four
+training files with different frequencies of sampled sinusoid signals are
+shown below. Create a directory for this experiment and create two sub
+directories, <b>data</b> and <b>target.</b> Cut and paste the data files
+below to these directories. You also need a file listing the datafiles.
+Name it <b>trainfiles</b>, and copy it from the box below. Then create
+the network using the script below, and train it using back-propagation
+through time, with the following command:</font>
+<br><b><font face="Arial,Helvetica">BackProp -S -p net.log -g1e-5 -F20
+30 -T2 -i1000 -d net.rtdnn trainfiles</font></b>
+<br><font face="Arial,Helvetica">Depending on how fast your computer is,
+this may take some time... You can see if the network converges by inspecting
+the log file, <b>net.log</b>. If it converges, the global error should
+be lower than 1e-1. If not, try another back-propagation run with a lower
+gain:</font>
+<br><b><font face="Arial,Helvetica">BackProp -S -p net.log2 -g1e-6 -F20
+30 -T2 -i1000 -d net.rtdnn trainfiles</font></b>
+<br><font face="Arial,Helvetica">Hopefully, the network has converged after
+the second back-propagation run. You can then excite the network by running
+the command:</font>
+<br><b><font face="Arial,Helvetica">Excite -X TARG net.rtdnn x3.data</font></b>
+<br><font face="Arial,Helvetica">and inspecting the created file <b>x3.act</b>.
+The third column of activities in this file should be close to +1.0, and
+all other columns should be close to 0.0. Check the other data files, <b>x1</b>,
+<b>x2</b>,
+and <b>x4</b>, too if you like.</font>
+<br>&nbsp;
+<table BORDER COLS=2 WIDTH="100%" NOSAVE >
+<tr NOSAVE>
+<td>
+<table BORDER CELLSPACING=0 CELLPADDING=10 BGCOLOR="#FFF8DC" >
+<tr>
+<td><tt>#!/bin/sh -v</tt>
+<p>FEATURESIZE=25&nbsp;
+<p>NET=net.rtdnn&nbsp;
+<p>CreateNet $NET $NET&nbsp;
+<p>AddStream -x data -d ./data -F ascii 1 r DATA $NET&nbsp;
+<p>AddGroup data $NET&nbsp;
+<br>AddUnit -i -u 1 data $NET&nbsp;
+<br>LinkGroup DATA data $NET&nbsp;
+<p>AddStream -x targ -d ./targ -F ascii 4 t TARG $NET&nbsp;
+<p>AddGroup targ $NET&nbsp;
+<br>AddUnit -o -u 4 targ $NET&nbsp;
+<br>LinkGroup TARG targ $NET&nbsp;
+<p>AddGroup features $NET&nbsp;
+<br>AddUnit -u $FEATURESIZE features $NET&nbsp;
+<p>Connect -D -3 3 data features $NET&nbsp;
+<br>Connect -D 1 5 features features $NET&nbsp;
+<br>Connect -D -1 1 features targ $NET</td>
+</tr>
+</table>
+&nbsp;</td>
+
+<td VALIGN=TOP NOSAVE>File: trainfiles&nbsp;
+<table BORDER CELLSPACING=0 CELLPADDING=10 BGCOLOR="#FFF8DC" >
+<tr>
+<td><tt>x1.data</tt>
+<br><tt>x2.data</tt>
+<br><tt>x3.data</tt>
+<br><tt>x4.data</tt></td>
+</tr>
+</table>
+&nbsp;</td>
+</tr>
+</table>
+
+<table BORDER CELLSPACING=0 CELLPADDING=2 NOSAVE >
+<tr VALIGN=TOP NOSAVE>
+<td NOSAVE>
+<center>File: data/x1.data&nbsp;</center>
+
+<table BORDER CELLSPACING=0 CELLPADDING=10 WIDTH="100%" BGCOLOR="#F5F5DC" >
+<tr>
+<td>
+<div align=right>&nbsp;0.0000&nbsp;</div>
+
+<div align=right>&nbsp;0.8415&nbsp;</div>
+
+<div align=right>&nbsp;0.9093&nbsp;</div>
+
+<div align=right>&nbsp;0.1411&nbsp;</div>
+
+<div align=right>-0.7568&nbsp;</div>
+
+<div align=right>-0.9589&nbsp;</div>
+
+<div align=right>-0.2794&nbsp;</div>
+
+<div align=right>&nbsp;0.6570&nbsp;</div>
+
+<div align=right>&nbsp;0.9894&nbsp;</div>
+
+<div align=right>&nbsp;0.4121&nbsp;</div>
+
+<div align=right>-0.5440&nbsp;</div>
+
+<div align=right>-1.0000&nbsp;</div>
+
+<div align=right>-0.5366&nbsp;</div>
+
+<div align=right>&nbsp;0.4202</div>
+
+<div align=right>&nbsp;0.9906&nbsp;</div>
+
+<div align=right>&nbsp;0.6503&nbsp;</div>
+
+<div align=right>-0.2879&nbsp;</div>
+
+<div align=right>-0.9614</div>
+
+<div align=right>-0.7510&nbsp;</div>
+
+<div align=right>&nbsp;0.1499&nbsp;</div>
+
+<div align=right>&nbsp;0.9129&nbsp;</div>
+
+<div align=right>&nbsp;0.8367&nbsp;</div>
+
+<div align=right>-0.0089&nbsp;</div>
+
+<div align=right>-0.8462&nbsp;</div>
+
+<div align=right>-0.9056&nbsp;</div>
+
+<div align=right>-0.1324&nbsp;</div>
+
+<div align=right>&nbsp;0.7626&nbsp;</div>
+
+<div align=right>&nbsp;0.9564&nbsp;</div>
+
+<div align=right>&nbsp;0.2709&nbsp;</div>
+
+<div align=right>-0.6636&nbsp;</div>
+
+<div align=right>-0.9880&nbsp;</div>
+
+<div align=right>-0.4040&nbsp;</div>
+
+<div align=right>&nbsp;0.5514&nbsp;</div>
+
+<div align=right>&nbsp;0.9999&nbsp;</div>
+
+<div align=right>&nbsp;0.5291&nbsp;</div>
+
+<div align=right>-0.4282&nbsp;</div>
+
+<div align=right>-0.9918&nbsp;</div>
+
+<div align=right>-0.6435&nbsp;</div>
+
+<div align=right>&nbsp;0.2964&nbsp;</div>
+
+<div align=right>&nbsp;0.9638&nbsp;</div>
+
+<div align=right>&nbsp;0.7451&nbsp;</div>
+
+<div align=right>-0.1586&nbsp;</div>
+
+<div align=right>-0.9165&nbsp;</div>
+
+<div align=right>-0.8318&nbsp;</div>
+
+<div align=right>&nbsp;0.0177&nbsp;</div>
+
+<div align=right>&nbsp;0.8509&nbsp;</div>
+
+<div align=right>&nbsp;0.9018&nbsp;</div>
+
+<div align=right>&nbsp;0.1236&nbsp;</div>
+
+<div align=right>-0.7683&nbsp;</div>
+
+<div align=right>-0.9538&nbsp;</div>
+
+<div align=right>-0.2624&nbsp;</div>
+
+<div align=right>&nbsp;0.6702&nbsp;</div>
+
+<div align=right>&nbsp;0.9866&nbsp;</div>
+
+<div align=right>&nbsp;0.3959&nbsp;</div>
+
+<div align=right>-0.5588&nbsp;</div>
+
+<div align=right>-0.9998&nbsp;</div>
+
+<div align=right>-0.5216&nbsp;</div>
+
+<div align=right>&nbsp;0.4362&nbsp;</div>
+
+<div align=right>&nbsp;0.9929&nbsp;</div>
+
+<div align=right>&nbsp;0.6367&nbsp;</div>
+
+<div align=right>-0.3048&nbsp;</div>
+
+<div align=right>-0.9661&nbsp;</div>
+
+<div align=right>-0.7392&nbsp;</div>
+
+<div align=right>&nbsp;0.1674&nbsp;</div>
+
+<div align=right>&nbsp;0.9200&nbsp;</div>
+
+<div align=right>&nbsp;0.8268&nbsp;</div>
+
+<div align=right>-0.0266&nbsp;</div>
+
+<div align=right>-0.8555&nbsp;</div>
+
+<div align=right>-0.8979&nbsp;</div>
+
+<div align=right>-0.1148&nbsp;</div>
+
+<div align=right>&nbsp;0.7739&nbsp;</div>
+
+<div align=right>&nbsp;0.9511&nbsp;</div>
+
+<div align=right>&nbsp;0.2538&nbsp;</div>
+
+<div align=right>-0.6768&nbsp;</div>
+
+<div align=right>-0.9851&nbsp;</div>
+
+<div align=right>-0.3878&nbsp;</div>
+
+<div align=right>&nbsp;0.5661&nbsp;</div>
+
+<div align=right>&nbsp;0.9995&nbsp;</div>
+
+<div align=right>&nbsp;0.5140&nbsp;</div>
+
+<div align=right>-0.4441&nbsp;</div>
+
+<div align=right>-0.9939&nbsp;</div>
+
+<div align=right>-0.6299&nbsp;</div>
+
+<div align=right>&nbsp;0.3132&nbsp;</div>
+
+<div align=right>&nbsp;0.9684&nbsp;</div>
+
+<div align=right>&nbsp;0.7332&nbsp;</div>
+
+<div align=right>-0.1761&nbsp;</div>
+
+<div align=right>-0.9235&nbsp;</div>
+
+<div align=right>-0.8218&nbsp;</div>
+
+<div align=right>&nbsp;0.0354&nbsp;</div>
+
+<div align=right>&nbsp;0.8601&nbsp;</div>
+
+<div align=right>&nbsp;0.8940&nbsp;</div>
+
+<div align=right>&nbsp;0.1060&nbsp;</div>
+
+<div align=right>-0.7795&nbsp;</div>
+
+<div align=right>-0.9483&nbsp;</div>
+
+<div align=right>-0.2453&nbsp;</div>
+
+<div align=right>&nbsp;0.6833&nbsp;</div>
+
+<div align=right>&nbsp;0.9836&nbsp;</div>
+
+<div align=right>&nbsp;0.3796&nbsp;</div>
+
+<div align=right>-0.5734&nbsp;</div>
+
+<div align=right>-0.9992&nbsp;</div>
+
+<div align=right>-0.5064</div>
+</td>
+</tr>
+</table>
+&nbsp;</td>
+
+<td>
+<center>File: data/x2.data&nbsp;</center>
+
+<table BORDER CELLSPACING=0 CELLPADDING=10 WIDTH="100%" BGCOLOR="#F5F5DC" >
+<tr>
+<td>
+<div align=right>&nbsp;0.0000&nbsp;</div>
+
+<div align=right>&nbsp;0.6442&nbsp;</div>
+
+<div align=right>&nbsp;0.9854&nbsp;</div>
+
+<div align=right>&nbsp;0.8632&nbsp;</div>
+
+<div align=right>&nbsp;0.3350&nbsp;</div>
+
+<div align=right>-0.3508&nbsp;</div>
+
+<div align=right>-0.8716&nbsp;</div>
+
+<div align=right>-0.9825&nbsp;</div>
+
+<div align=right>-0.6313&nbsp;</div>
+
+<div align=right>&nbsp;0.0168&nbsp;</div>
+
+<div align=right>&nbsp;0.6570&nbsp;</div>
+
+<div align=right>&nbsp;0.9882&nbsp;</div>
+
+<div align=right>&nbsp;0.8546&nbsp;</div>
+
+<div align=right>&nbsp;0.3191&nbsp;</div>
+
+<div align=right>-0.3665&nbsp;</div>
+
+<div align=right>-0.8797&nbsp;</div>
+
+<div align=right>-0.9792&nbsp;</div>
+
+<div align=right>-0.6181&nbsp;</div>
+
+<div align=right>&nbsp;0.0336&nbsp;</div>
+
+<div align=right>&nbsp;0.6696&nbsp;</div>
+
+<div align=right>&nbsp;0.9906&nbsp;</div>
+
+<div align=right>&nbsp;0.8457&nbsp;</div>
+
+<div align=right>&nbsp;0.3031&nbsp;</div>
+
+<div align=right>-0.3821&nbsp;</div>
+
+<div align=right>-0.8876&nbsp;</div>
+
+<div align=right>-0.9756&nbsp;</div>
+
+<div align=right>-0.6048&nbsp;</div>
+
+<div align=right>&nbsp;0.0504&nbsp;</div>
+
+<div align=right>&nbsp;0.6820&nbsp;</div>
+
+<div align=right>&nbsp;0.9928&nbsp;</div>
+
+<div align=right>&nbsp;0.8367&nbsp;</div>
+
+<div align=right>&nbsp;0.2871&nbsp;</div>
+
+<div align=right>-0.3976&nbsp;</div>
+
+<div align=right>-0.8952&nbsp;</div>
+
+<div align=right>-0.9718&nbsp;</div>
+
+<div align=right>-0.5914&nbsp;</div>
+
+<div align=right>&nbsp;0.0672&nbsp;</div>
+
+<div align=right>&nbsp;0.6942&nbsp;</div>
+
+<div align=right>&nbsp;0.9946&nbsp;</div>
+
+<div align=right>&nbsp;0.8273&nbsp;</div>
+
+<div align=right>&nbsp;0.2709&nbsp;</div>
+
+<div align=right>-0.4129&nbsp;</div>
+
+<div align=right>-0.9026&nbsp;</div>
+
+<div align=right>-0.9677&nbsp;</div>
+
+<div align=right>-0.5777&nbsp;</div>
+
+<div align=right>&nbsp;0.0840&nbsp;</div>
+
+<div align=right>&nbsp;0.7062&nbsp;</div>
+
+<div align=right>&nbsp;0.9962&nbsp;</div>
+
+<div align=right>&nbsp;0.8178&nbsp;</div>
+
+<div align=right>&nbsp;0.2547&nbsp;</div>
+
+<div align=right>-0.4282&nbsp;</div>
+
+<div align=right>-0.9097&nbsp;</div>
+
+<div align=right>-0.9633&nbsp;</div>
+
+<div align=right>-0.5639&nbsp;</div>
+
+<div align=right>&nbsp;0.1007&nbsp;</div>
+
+<div align=right>&nbsp;0.7180&nbsp;</div>
+
+<div align=right>&nbsp;0.9976&nbsp;</div>
+
+<div align=right>&nbsp;0.8080&nbsp;</div>
+
+<div align=right>&nbsp;0.2384&nbsp;</div>
+
+<div align=right>-0.4433&nbsp;</div>
+
+<div align=right>-0.9165&nbsp;</div>
+
+<div align=right>-0.9587&nbsp;</div>
+
+<div align=right>-0.5499&nbsp;</div>
+
+<div align=right>&nbsp;0.1174&nbsp;</div>
+
+<div align=right>&nbsp;0.7296&nbsp;</div>
+
+<div align=right>&nbsp;0.9986&nbsp;</div>
+
+<div align=right>&nbsp;0.7980&nbsp;</div>
+
+<div align=right>&nbsp;0.2220&nbsp;</div>
+
+<div align=right>-0.4583&nbsp;</div>
+
+<div align=right>-0.9231&nbsp;</div>
+
+<div align=right>-0.9538&nbsp;</div>
+
+<div align=right>-0.5358&nbsp;</div>
+
+<div align=right>&nbsp;0.1341&nbsp;</div>
+
+<div align=right>&nbsp;0.7410&nbsp;</div>
+
+<div align=right>&nbsp;0.9993&nbsp;</div>
+
+<div align=right>&nbsp;0.7877&nbsp;</div>
+
+<div align=right>&nbsp;0.2056&nbsp;</div>
+
+<div align=right>-0.4732&nbsp;</div>
+
+<div align=right>-0.9295&nbsp;</div>
+
+<div align=right>-0.9486&nbsp;</div>
+
+<div align=right>-0.5216&nbsp;</div>
+
+<div align=right>&nbsp;0.1508&nbsp;</div>
+
+<div align=right>&nbsp;0.7522&nbsp;</div>
+
+<div align=right>&nbsp;0.9998&nbsp;</div>
+
+<div align=right>&nbsp;0.7772&nbsp;</div>
+
+<div align=right>&nbsp;0.1891&nbsp;</div>
+
+<div align=right>-0.4879&nbsp;</div>
+
+<div align=right>-0.9355&nbsp;</div>
+
+<div align=right>-0.9431&nbsp;</div>
+
+<div align=right>-0.5071&nbsp;</div>
+
+<div align=right>&nbsp;0.1674&nbsp;</div>
+
+<div align=right>&nbsp;0.7631&nbsp;</div>
+
+<div align=right>&nbsp;1.0000&nbsp;</div>
+
+<div align=right>&nbsp;0.7665&nbsp;</div>
+
+<div align=right>&nbsp;0.1726&nbsp;</div>
+
+<div align=right>-0.5026&nbsp;</div>
+
+<div align=right>-0.9413&nbsp;</div>
+
+<div align=right>-0.9374&nbsp;</div>
+
+<div align=right>-0.4926&nbsp;</div>
+
+<div align=right>&nbsp;0.1839&nbsp;</div>
+
+<div align=right>&nbsp;0.7739</div>
+</td>
+</tr>
+</table>
+&nbsp;</td>
+
+<td>
+<center>File: data/x1.data&nbsp;</center>
+
+<table BORDER CELLSPACING=0 CELLPADDING=10 WIDTH="100%" BGCOLOR="#F5F5DC" >
+<tr>
+<td>
+<div align=right>&nbsp;0.0000&nbsp;</div>
+
+<div align=right>&nbsp;0.4794&nbsp;</div>
+
+<div align=right>&nbsp;0.8415&nbsp;</div>
+
+<div align=right>&nbsp;0.9975&nbsp;</div>
+
+<div align=right>&nbsp;0.9093&nbsp;</div>
+
+<div align=right>&nbsp;0.5985&nbsp;</div>
+
+<div align=right>&nbsp;0.1411&nbsp;</div>
+
+<div align=right>-0.3508&nbsp;</div>
+
+<div align=right>-0.7568&nbsp;</div>
+
+<div align=right>-0.9775&nbsp;</div>
+
+<div align=right>-0.9589&nbsp;</div>
+
+<div align=right>-0.7055&nbsp;</div>
+
+<div align=right>-0.2794&nbsp;</div>
+
+<div align=right>&nbsp;0.2151&nbsp;</div>
+
+<div align=right>&nbsp;0.6570&nbsp;</div>
+
+<div align=right>&nbsp;0.9380&nbsp;</div>
+
+<div align=right>&nbsp;0.9894&nbsp;</div>
+
+<div align=right>&nbsp;0.7985&nbsp;</div>
+
+<div align=right>&nbsp;0.4121&nbsp;</div>
+
+<div align=right>-0.0752&nbsp;</div>
+
+<div align=right>-0.5440&nbsp;</div>
+
+<div align=right>-0.8797&nbsp;</div>
+
+<div align=right>-1.0000&nbsp;</div>
+
+<div align=right>-0.8755&nbsp;</div>
+
+<div align=right>-0.5366&nbsp;</div>
+
+<div align=right>-0.0663&nbsp;</div>
+
+<div align=right>&nbsp;0.4202&nbsp;</div>
+
+<div align=right>&nbsp;0.8038&nbsp;</div>
+
+<div align=right>&nbsp;0.9906&nbsp;</div>
+
+<div align=right>&nbsp;0.9349&nbsp;</div>
+
+<div align=right>&nbsp;0.6503&nbsp;</div>
+
+<div align=right>&nbsp;0.2065&nbsp;</div>
+
+<div align=right>-0.2879&nbsp;</div>
+
+<div align=right>-0.7118&nbsp;</div>
+
+<div align=right>-0.9614&nbsp;</div>
+
+<div align=right>-0.9756&nbsp;</div>
+
+<div align=right>-0.7510&nbsp;</div>
+
+<div align=right>-0.3425&nbsp;</div>
+
+<div align=right>&nbsp;0.1499&nbsp;</div>
+
+<div align=right>&nbsp;0.6055&nbsp;</div>
+
+<div align=right>&nbsp;0.9129&nbsp;</div>
+
+<div align=right>&nbsp;0.9968&nbsp;</div>
+
+<div align=right>&nbsp;0.8367&nbsp;</div>
+
+<div align=right>&nbsp;0.4716&nbsp;</div>
+
+<div align=right>-0.0089&nbsp;</div>
+
+<div align=right>-0.4872&nbsp;</div>
+
+<div align=right>-0.8462&nbsp;</div>
+
+<div align=right>-0.9981&nbsp;</div>
+
+<div align=right>-0.9056&nbsp;</div>
+
+<div align=right>-0.5914&nbsp;</div>
+
+<div align=right>-0.1324&nbsp;</div>
+
+<div align=right>&nbsp;0.3591&nbsp;</div>
+
+<div align=right>&nbsp;0.7626&nbsp;</div>
+
+<div align=right>&nbsp;0.9794&nbsp;</div>
+
+<div align=right>&nbsp;0.9564&nbsp;</div>
+
+<div align=right>&nbsp;0.6992&nbsp;</div>
+
+<div align=right>&nbsp;0.2709&nbsp;</div>
+
+<div align=right>-0.2238&nbsp;</div>
+
+<div align=right>-0.6636&nbsp;</div>
+
+<div align=right>-0.9410&nbsp;</div>
+
+<div align=right>-0.9880&nbsp;</div>
+
+<div align=right>-0.7931&nbsp;</div>
+
+<div align=right>-0.4040&nbsp;</div>
+
+<div align=right>&nbsp;0.0840&nbsp;</div>
+
+<div align=right>&nbsp;0.5514&nbsp;</div>
+
+<div align=right>&nbsp;0.8839&nbsp;</div>
+
+<div align=right>&nbsp;0.9999&nbsp;</div>
+
+<div align=right>&nbsp;0.8711&nbsp;</div>
+
+<div align=right>&nbsp;0.5291&nbsp;</div>
+
+<div align=right>&nbsp;0.0575&nbsp;</div>
+
+<div align=right>-0.4282&nbsp;</div>
+
+<div align=right>-0.8090&nbsp;</div>
+
+<div align=right>-0.9918&nbsp;</div>
+
+<div align=right>-0.9317&nbsp;</div>
+
+<div align=right>-0.6435&nbsp;</div>
+
+<div align=right>-0.1978&nbsp;</div>
+
+<div align=right>&nbsp;0.2964&nbsp;</div>
+
+<div align=right>&nbsp;0.7180&nbsp;</div>
+
+<div align=right>&nbsp;0.9638&nbsp;</div>
+
+<div align=right>&nbsp;0.9736&nbsp;</div>
+
+<div align=right>&nbsp;0.7451&nbsp;</div>
+
+<div align=right>&nbsp;0.3342&nbsp;</div>
+
+<div align=right>-0.1586&nbsp;</div>
+
+<div align=right>-0.6126&nbsp;</div>
+
+<div align=right>-0.9165&nbsp;</div>
+
+<div align=right>-0.9961&nbsp;</div>
+
+<div align=right>-0.8318&nbsp;</div>
+
+<div align=right>-0.4638&nbsp;</div>
+
+<div align=right>&nbsp;0.0177&nbsp;</div>
+
+<div align=right>&nbsp;0.4949&nbsp;</div>
+
+<div align=right>&nbsp;0.8509&nbsp;</div>
+
+<div align=right>&nbsp;0.9986&nbsp;</div>
+
+<div align=right>&nbsp;0.9018&nbsp;</div>
+
+<div align=right>&nbsp;0.5842&nbsp;</div>
+
+<div align=right>&nbsp;0.1236&nbsp;</div>
+
+<div align=right>-0.3673&nbsp;</div>
+
+<div align=right>-0.7683&nbsp;</div>
+
+<div align=right>-0.9811&nbsp;</div>
+
+<div align=right>-0.9538&nbsp;</div>
+
+<div align=right>-0.6929&nbsp;</div>
+
+<div align=right>-0.2624</div>
+</td>
+</tr>
+</table>
+&nbsp;</td>
+
+<td>
+<center>File: data/x4.data&nbsp;</center>
+
+<table BORDER CELLSPACING=0 CELLPADDING=10 WIDTH="100%" BGCOLOR="#F5F5DC" >
+<tr>
+<td>
+<div align=right>&nbsp;0.0000&nbsp;</div>
+
+<div align=right>&nbsp;0.2955&nbsp;</div>
+
+<div align=right>&nbsp;0.5646&nbsp;</div>
+
+<div align=right>&nbsp;0.7833&nbsp;</div>
+
+<div align=right>&nbsp;0.9320&nbsp;</div>
+
+<div align=right>&nbsp;0.9975&nbsp;</div>
+
+<div align=right>&nbsp;0.9738&nbsp;</div>
+
+<div align=right>&nbsp;0.8632&nbsp;</div>
+
+<div align=right>&nbsp;0.6755&nbsp;</div>
+
+<div align=right>&nbsp;0.4274&nbsp;</div>
+
+<div align=right>&nbsp;0.1411&nbsp;</div>
+
+<div align=right>-0.1577&nbsp;</div>
+
+<div align=right>-0.4425&nbsp;</div>
+
+<div align=right>-0.6878&nbsp;</div>
+
+<div align=right>-0.8716&nbsp;</div>
+
+<div align=right>-0.9775&nbsp;</div>
+
+<div align=right>-0.9962&nbsp;</div>
+
+<div align=right>-0.9258&nbsp;</div>
+
+<div align=right>-0.7728&nbsp;</div>
+
+<div align=right>-0.5507&nbsp;</div>
+
+<div align=right>-0.2794&nbsp;</div>
+
+<div align=right>&nbsp;0.0168&nbsp;</div>
+
+<div align=right>&nbsp;0.3115&nbsp;</div>
+
+<div align=right>&nbsp;0.5784&nbsp;</div>
+
+<div align=right>&nbsp;0.7937&nbsp;</div>
+
+<div align=right>&nbsp;0.9380&nbsp;</div>
+
+<div align=right>&nbsp;0.9985&nbsp;</div>
+
+<div align=right>&nbsp;0.9699&nbsp;</div>
+
+<div align=right>&nbsp;0.8546&nbsp;</div>
+
+<div align=right>&nbsp;0.6630&nbsp;</div>
+
+<div align=right>&nbsp;0.4121&nbsp;</div>
+
+<div align=right>&nbsp;0.1245&nbsp;</div>
+
+<div align=right>-0.1743&nbsp;</div>
+
+<div align=right>-0.4575&nbsp;</div>
+
+<div align=right>-0.6999&nbsp;</div>
+
+<div align=right>-0.8797&nbsp;</div>
+
+<div align=right>-0.9809&nbsp;</div>
+
+<div align=right>-0.9946&nbsp;</div>
+
+<div align=right>-0.9193&nbsp;</div>
+
+<div align=right>-0.7620&nbsp;</div>
+
+<div align=right>-0.5366&nbsp;</div>
+
+<div align=right>-0.2632&nbsp;</div>
+
+<div align=right>&nbsp;0.0336&nbsp;</div>
+
+<div align=right>&nbsp;0.3275&nbsp;</div>
+
+<div align=right>&nbsp;0.5921&nbsp;</div>
+
+<div align=right>&nbsp;0.8038&nbsp;</div>
+
+<div align=right>&nbsp;0.9437&nbsp;</div>
+
+<div align=right>&nbsp;0.9993&nbsp;</div>
+
+<div align=right>&nbsp;0.9657&nbsp;</div>
+
+<div align=right>&nbsp;0.8457&nbsp;</div>
+
+<div align=right>&nbsp;0.6503&nbsp;</div>
+
+<div align=right>&nbsp;0.3967&nbsp;</div>
+
+<div align=right>&nbsp;0.1078&nbsp;</div>
+
+<div align=right>-0.1909&nbsp;</div>
+
+<div align=right>-0.4724&nbsp;</div>
+
+<div align=right>-0.7118&nbsp;</div>
+
+<div align=right>-0.8876&nbsp;</div>
+
+<div align=right>-0.9841&nbsp;</div>
+
+<div align=right>-0.9927&nbsp;</div>
+
+<div align=right>-0.9126&nbsp;</div>
+
+<div align=right>-0.7510&nbsp;</div>
+
+<div align=right>-0.5223&nbsp;</div>
+
+<div align=right>-0.2470&nbsp;</div>
+
+<div align=right>&nbsp;0.0504&nbsp;</div>
+
+<div align=right>&nbsp;0.3433&nbsp;</div>
+
+<div align=right>&nbsp;0.6055&nbsp;</div>
+
+<div align=right>&nbsp;0.8137&nbsp;</div>
+
+<div align=right>&nbsp;0.9491&nbsp;</div>
+
+<div align=right>&nbsp;0.9998&nbsp;</div>
+
+<div align=right>&nbsp;0.9612&nbsp;</div>
+
+<div align=right>&nbsp;0.8367&nbsp;</div>
+
+<div align=right>&nbsp;0.6374&nbsp;</div>
+
+<div align=right>&nbsp;0.3813&nbsp;</div>
+
+<div align=right>&nbsp;0.0910&nbsp;</div>
+
+<div align=right>-0.2073&nbsp;</div>
+
+<div align=right>-0.4872&nbsp;</div>
+
+<div align=right>-0.7235&nbsp;</div>
+
+<div align=right>-0.8952&nbsp;</div>
+
+<div align=right>-0.9869&nbsp;</div>
+
+<div align=right>-0.9905&nbsp;</div>
+
+<div align=right>-0.9056&nbsp;</div>
+
+<div align=right>-0.7398&nbsp;</div>
+
+<div align=right>-0.5079&nbsp;</div>
+
+<div align=right>-0.2306&nbsp;</div>
+
+<div align=right>&nbsp;0.0672&nbsp;</div>
+
+<div align=right>&nbsp;0.3591&nbsp;</div>
+
+<div align=right>&nbsp;0.6188&nbsp;</div>
+
+<div align=right>&nbsp;0.8233&nbsp;</div>
+
+<div align=right>&nbsp;0.9543&nbsp;</div>
+
+<div align=right>&nbsp;1.0000&nbsp;</div>
+
+<div align=right>&nbsp;0.9564&nbsp;</div>
+
+<div align=right>&nbsp;0.8273&nbsp;</div>
+
+<div align=right>&nbsp;0.6244&nbsp;</div>
+
+<div align=right>&nbsp;0.3657&nbsp;</div>
+
+<div align=right>&nbsp;0.0743&nbsp;</div>
+
+<div align=right>-0.2238&nbsp;</div>
+
+<div align=right>-0.5018&nbsp;</div>
+
+<div align=right>-0.7350&nbsp;</div>
+
+<div align=right>-0.9026&nbsp;</div>
+
+<div align=right>-0.9895&nbsp;</div>
+
+<div align=right>-0.9880</div>
+</td>
+</tr>
+</table>
+&nbsp;</td>
+
+<td>
+<center>File: targ/x1.targ&nbsp;</center>
+
+<table BORDER CELLSPACING=0 CELLPADDING=10 WIDTH="100%" BGCOLOR="#F5F5DC" >
+<tr>
+<td>
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0&nbsp;</div>
+
+<div align=right>1 0 0 0</div>
+</td>
+</tr>
+</table>
+&nbsp;</td>
+
+<td>
+<center>File: targ/x2.targ&nbsp;</center>
+
+<table BORDER CELLSPACING=0 CELLPADDING=10 WIDTH="100%" BGCOLOR="#F5F5DC" >
+<tr>
+<td>
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0&nbsp;</div>
+
+<div align=right>0 1 0 0</div>
+</td>
+</tr>
+</table>
+&nbsp;</td>
+
+<td>
+<center>File: targ/x3.targ&nbsp;</center>
+
+<table BORDER CELLSPACING=0 CELLPADDING=10 WIDTH="100%" BGCOLOR="#F5F5DC" >
+<tr>
+<td>
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0&nbsp;</div>
+
+<div align=right>0 0 1 0</div>
+</td>
+</tr>
+</table>
+&nbsp;</td>
+
+<td>
+<center>File: targ/x4.targ&nbsp;</center>
+
+<table BORDER CELLSPACING=0 CELLPADDING=10 WIDTH="100%" BGCOLOR="#F5F5DC" >
+<tr>
+<td>
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1&nbsp;</div>
+
+<div align=right>0 0 0 1</div>
+</td>
+</tr>
+</table>
+&nbsp;</td>
+</tr>
+</table>
+
+<hr NOSHADE SIZE=3>
+<table CELLSPACING=0 CELLPADDING=5 WIDTH="100%" NOSAVE >
+<tr NOSAVE>
+<td NOSAVE><a NAME="FIGURE8"></a>
+<br><img SRC="fig8.gif" height=299 width=319></td>
+
+<td ALIGN=LEFT VALIGN=BOTTOM NOSAVE><i>In the figure 8 example, we see
+how the network can be taught to draw this figure using its two output
+units.</i></td>
+</tr>
+</table>
+
+<h2>
+The figure 8</h2>
+<font face="Arial,Helvetica">This example shows how the output of a dynamic
+ANN can have temporal structure. The input to the network is simply a trigger
+signal that is zero most of the time, but at one point in time it is one
+for one time-frame. After this trigger signal, the network is requried
+to draw the figure 8 using its two output units: x and y.</font>
+<br><font face="Arial,Helvetica">The following two data files define the
+problem:</font>
+<table CELLSPACING=0 CELLPADDING=20 >
+<tr VALIGN=TOP>
+<td><i>File: fig8.trig</i>
+<table BORDER CELLSPACING=0 CELLPADDING=10 WIDTH="100%" BGCOLOR="#F5F5DC" >
+<tr>
+<td><tt>&nbsp;0.00&nbsp;</tt>
+<br><tt>&nbsp;0.00&nbsp;</tt>
+<br><tt>&nbsp;0.00&nbsp;</tt>
+<br><tt>&nbsp;0.00&nbsp;</tt>
+<br><tt>&nbsp;0.00&nbsp;</tt>
+<br><tt>&nbsp;0.00&nbsp;</tt>
+<br><tt>&nbsp;0.00&nbsp;</tt>
+<br><tt>&nbsp;1.00&nbsp;</tt>
+<br><tt>&nbsp;0.00&nbsp;</tt>
+<br><tt>&nbsp;0.00&nbsp;</tt>
+<br><tt>&nbsp;0.00&nbsp;</tt>
+<br><tt>&nbsp;0.00&nbsp;</tt>
+<br><tt>&nbsp;0.00&nbsp;</tt>
+<br><tt>&nbsp;0.00&nbsp;</tt>
+<br><tt>&nbsp;0.00&nbsp;</tt>
+<br><tt>&nbsp;0.00&nbsp;</tt>
+<br><tt>&nbsp;0.00&nbsp;</tt>
+<br><tt>&nbsp;0.00&nbsp;</tt>
+<br><tt>&nbsp;0.00&nbsp;</tt>
+<br><tt>&nbsp;0.00&nbsp;</tt>
+<br><tt>&nbsp;0.00&nbsp;</tt>
+<br><tt>&nbsp;0.00&nbsp;</tt>
+<br><tt>&nbsp;0.00&nbsp;</tt>
+<br><tt>&nbsp;0.00&nbsp;</tt>
+<br><tt>&nbsp;0.00&nbsp;</tt>
+<br><tt>&nbsp;0.00&nbsp;</tt>
+<br><tt>&nbsp;0.00&nbsp;</tt>
+<br><tt>&nbsp;0.00&nbsp;</tt>
+<br><tt>&nbsp;0.00&nbsp;</tt>
+<br><tt>&nbsp;0.00&nbsp;</tt>
+<br><tt>&nbsp;0.00&nbsp;</tt>
+<br><tt>&nbsp;0.00&nbsp;</tt>
+<br><tt>&nbsp;0.00&nbsp;</tt></td>
+</tr>
+</table>
+&nbsp;</td>
+
+<td><i>File: fig8.pos</i>
+<table BORDER CELLSPACING=0 CELLPADDING=10 WIDTH="100%" BGCOLOR="#F5F5DC" >
+<tr>
+<td>&nbsp; <tt>0.00&nbsp;&nbsp;&nbsp; 0.00</tt>
+<br><tt>&nbsp;0.00&nbsp;&nbsp;&nbsp; 0.00</tt>
+<br><tt>&nbsp;0.00&nbsp;&nbsp;&nbsp; 0.00</tt>
+<br><tt>&nbsp;0.00&nbsp;&nbsp;&nbsp; 0.00</tt>
+<br><tt>&nbsp;0.00&nbsp;&nbsp;&nbsp; 0.00</tt>
+<br><tt>&nbsp;0.00&nbsp;&nbsp;&nbsp; 0.00</tt>
+<br><tt>&nbsp;0.00&nbsp;&nbsp;&nbsp; 0.00</tt>
+<br><tt>&nbsp;0.00&nbsp;&nbsp;&nbsp; 0.00</tt>
+<br><tt>-0.25&nbsp;&nbsp;&nbsp; 0.50</tt>
+<br><tt>-0.50&nbsp;&nbsp;&nbsp; 1.00</tt>
+<br><tt>-0.75&nbsp;&nbsp;&nbsp; 1.00</tt>
+<br><tt>-1.00&nbsp;&nbsp;&nbsp; 0.50</tt>
+<br><tt>-1.00&nbsp;&nbsp;&nbsp; 0.00</tt>
+<br><tt>-1.00&nbsp;&nbsp; -0.50</tt>
+<br><tt>-0.75&nbsp;&nbsp; -1.00</tt>
+<br><tt>-0.50&nbsp;&nbsp; -1.00</tt>
+<br><tt>-0.25&nbsp;&nbsp; -0.50</tt>
+<br><tt>&nbsp;0.00&nbsp;&nbsp;&nbsp; 0.00</tt>
+<br><tt>&nbsp;0.25&nbsp;&nbsp;&nbsp; 0.50</tt>
+<br><tt>&nbsp;0.50&nbsp;&nbsp;&nbsp; 0.50</tt>
+<br><tt>&nbsp;0.75&nbsp;&nbsp;&nbsp; 0.00</tt>
+<br><tt>&nbsp;0.50&nbsp;&nbsp; -0.50</tt>
+<br><tt>&nbsp;0.25&nbsp;&nbsp; -0.50</tt>
+<br><tt>&nbsp;0.00&nbsp;&nbsp;&nbsp; 0.00</tt>
+<br><tt>&nbsp;0.00&nbsp;&nbsp;&nbsp; 0.00</tt>
+<br><tt>&nbsp;0.00&nbsp;&nbsp;&nbsp; 0.00</tt>
+<br><tt>&nbsp;0.00&nbsp;&nbsp;&nbsp; 0.00</tt>
+<br><tt>&nbsp;0.00&nbsp;&nbsp;&nbsp; 0.00</tt>
+<br><tt>&nbsp;0.00&nbsp;&nbsp;&nbsp; 0.00</tt>
+<br><tt>&nbsp;0.00&nbsp;&nbsp;&nbsp; 0.00</tt>
+<br><tt>&nbsp;0.00&nbsp;&nbsp;&nbsp; 0.00</tt>
+<br><tt>&nbsp;0.00&nbsp;&nbsp;&nbsp; 0.00</tt>
+<br><tt>&nbsp;0.00&nbsp;&nbsp;&nbsp; 0.00</tt></td>
+</tr>
+</table>
+&nbsp;</td>
+</tr>
+</table>
+<font face="Arial,Helvetica">&nbsp;Create the two data files in a new directory,
+and run the following script:</font>
+<br>&nbsp;
+<table BORDER CELLSPACING=0 CELLPADDING=10 BGCOLOR="#FFF8DC" >
+<tr>
+<td>#!/bin/sh -v&nbsp;
+<p>HIDDENSIZE=10&nbsp;
+<p>NET=net.rtdnn&nbsp;
+<p>CreateNet $NET $NET&nbsp;
+<p>AddStream -x trig -d. -F ascii 1 r TRIG $NET&nbsp;
+<p>AddGroup trig $NET&nbsp;
+<br>AddUnit -i -u 1 trig $NET&nbsp;
+<br>LinkGroup TRIG trig $NET&nbsp;
+<p>AddStream -x pos -d. -F ascii 2 t POS $NET&nbsp;
+<p>AddGroup pos $NET&nbsp;
+<br>AddUnit -o -u 2 pos $NET&nbsp;
+<br>Rename pos#1 x $NET&nbsp;
+<br>Rename pos#2 y $NET&nbsp;
+<br>LinkGroup POS pos $NET&nbsp;
+<br>NormStream -c 0 1 -s POS $NET&nbsp;
+<p>AddGroup hidden $NET&nbsp;
+<br>AddUnit -u $HIDDENSIZE hidden $NET&nbsp;
+<p>Connect trig hidden $NET&nbsp;
+<br>Connect -D 1 5 hidden hidden $NET&nbsp;
+<br>Connect hidden pos $NET&nbsp;
+<br>&nbsp;
+<p>BackProp -p net.log -g1e-2 -E -i400 -d net.rtdnn fig8.trig</td>
+</tr>
+</table>
+<font face="Arial,Helvetica">The script both creates a network and trains
+it using the BackProp command. There are recurrent connections in the hidden
+layer with up to five frames time-delay, but the figure-8 cycle is more
+than three times longer than that, so the network has to learn to use the
+activities of the hidden units to keep track of where in the cycle it is.
+Note that after 10 frames of the cycle, we're back in the origin, and at
+that point, the network has to remember to do the upper loop instead of
+simply stopping.</font>
+<p><font face="Arial,Helvetica">Check in the logfile if the training converged.
+If the global error is not less than 1.0e-02, try it again (I have run
+the script several times and it almost always converged).</font>
+<br><font face="Arial,Helvetica">Now you can check what the network actually
+outputs, by running:</font>
+<br><b><font face="Arial,Helvetica">Excite -X POS net.rtdnn fig8.trig</font></b>
+<br><font face="Arial,Helvetica">This generates the output file fig8.act
+that should be very similar to the target fig8.pos. Type:</font>
+<br><b><font face="Arial,Helvetica">cat fig8.act</font></b>
+<br><font face="Arial,Helvetica">to convince yourself.</font>
+<p>
+
+</body>
+</html>

@@ -1,0 +1,52 @@
+<HTML>
+
+<BODY BGCOLOR=#ffffff>
+
+
+<FONT SIZE=4>
+<FONT SIZE=+1>N<FONT SIZE=-1>AME: SetPlast
+
+<P><FONT SIZE=2>
+
+
+<P>
+<FONT SIZE=+1>S<FONT SIZE=-1>YNOPSIS:<FONT SIZE=2>
+
+SetPlast [options] From To Net
+
+
+
+<P>
+<FONT SIZE=+1>D<FONT SIZE=-1>ESCRIPTION<FONT SIZE=+1><P><FONT SIZE=2>
+
+<I>SetPlast</I> is used to set the "plasticity" of selected connections.
+All connections from the object 'From' to the object 'To', where 'From' and
+'To' can be either units or groups, are selected. The plasticity is a measure
+of how fast the connection weight should be changed in the training process. 
+In the case of back-propagation, it's simply a scaling factor of the gradient.
+Most commands that create connections initialize the plasticity to 1.0. 
+The default operation of <I>SetPlast</I> is to set the plasticity
+of selected connections to zero, effectively protecting them from changes.
+
+<P>
+<FONT SIZE=+1>O<FONT SIZE=-1>PTIONS<P>
+<TABLE>
+
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-w placticity      
+<TD><FONT SIZE=2>
+Specifies the plasticity value (default is 0.0). High plasticity means
+fast weight changes. Plasticity of new connections are normally initialized
+to 1.0.
+</TD></TR>
+
+</TABLE>
+
+<P>
+<FONT SIZE=+1>S<FONT SIZE=-1>EE<FONT SIZE=+1> 
+<FONT SIZE=+1>A<FONT SIZE=-1>LSO<FONT SIZE=+1><P><FONT SIZE=2>
+
+
+<A HREF=BackProp.html>BackProp</A>, 
+
+</BODY>

@@ -1,0 +1,94 @@
+<HTML>
+
+<BODY BGCOLOR=#ffffff>
+
+
+<CENTER>
+<FONT SIZE=4>
+<FONT SIZE=+1>N<FONT SIZE=-1>AME: Pipe
+</CENTER>
+
+<P><FONT SIZE=2>
+
+
+<P>
+<FONT SIZE=+1>S<FONT SIZE=-1>YNOPSIS:<FONT SIZE=2>
+
+Pipe [options] Source Target Net
+
+
+<P>
+<FONT SIZE=+1>D<FONT SIZE=-1>ESCRIPTION<P><FONT SIZE=2>
+Creates a "pipe" between the units of group 'Source' and 'Target', i.e.,
+unit number <I>i</I> of 'Target' is connected with unit number <I>i</I> of
+'Source'. If the group 'Target' already exists in the network,
+it must have the same number of units as the group 'Source'. If it doesn't
+exist it is created and the correct number of units (linear) is added to it.<P>
+
+The Pipe command can be used to create a new group of linear units
+that has activities that are equal to those of the source group (if the target
+units are linear and you use the option: -w 1.0).<P>
+
+Another use of this command is to create selfloop connections for all units in
+a group (set Source = Target and use the -d or -D options) without creating
+all the recurrent interconnections that the <A HREF=Connect.html>Connect</A>
+command would create.
+<P>
+<FONT SIZE=+1>O<FONT SIZE=-1>PTIONS<P>
+<TABLE>
+
+<TR><TD WIDTH=200 VALIGN=TOP><FONT SIZE=2>
+-d delay
+</TD>
+<TD><FONT SIZE=2>
+Delays connections "delay" time-units, where "delay" is a positive or negative
+integer. A negative time-delay is a look-ahead. Look-ahead connections are
+allowed in the NICO tolkit as long as no unit's activation depends on the
+same unit's activation at present or future times.
+</TD></TR>
+
+<TR><TD WIDTH=200 VALIGN=TOP><FONT SIZE=2>
+-D low high
+</TD>
+<TD><FONT SIZE=2>
+Use this option to create a window of dynamic connections for the "To" units.
+Connections with all time-delays from "low" to "high" are created.
+</TD></TR>
+
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-r bound
+</TD>
+<TD><FONT SIZE=2>
+By default, the connection weights are initialized by a square
+distributed random number R[-0.1;0.1]. This option controls the min. and max.
+values of the distibution (R[-bound;bound]).
+</TD></TR>
+
+<TR><TD WIDTH=200 VALIGN=TOP><FONT SIZE=2>
+-w weight
+</TD>
+<TD><FONT SIZE=2>
+Change the default 1.0 connection weight to the number 'weight'.
+<TD><FONT SIZE=2>
+</TD></TR>
+
+<TR>
+<TD WIDTH=200 VALIGN=TOP><FONT SIZE=2>
+-p plast
+<TD><FONT SIZE=2>
+Set plastictity of created connections. The default plasticity is 0.0, which
+is different from the normal default 1.0.
+</TD>
+</TR>
+
+
+</TABLE>
+
+
+<P>
+<FONT SIZE=+1>S<FONT SIZE=-1>EE<FONT SIZE=+1> 
+<FONT SIZE=+1>A<FONT SIZE=-1>LSO<FONT SIZE=+1><P><FONT SIZE=2>
+
+<A HREF=Connect.html>Connect</A> 
+
+</BODY>

@@ -1,0 +1,181 @@
+<html>
+<head>
+   <title>Units</title>
+</head>
+<body bgcolor="#FFFFFF">
+
+<center>
+<h1>
+<font size=+2>UNITS</font></h1></center>
+<font face="Arial,Helvetica">Units are one of the basic building blocks
+in a neural network. Every unit has, at each point in time, an activation
+value. In the NICO toolkit the activation is a real number. Some units,
+the input units, have their activation determined by external data (see
+the Streams section) or by the environment (see below). The activations
+of all other units except mutiplication units are computed by the following
+formula:</font>
+<pre><tt><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ___
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \
+net&nbsp; = /&nbsp;&nbsp;&nbsp; w&nbsp;&nbsp; a&nbsp; ;&nbsp; a = f( net )
+&nbsp;&nbsp; i&nbsp;&nbsp; ---&nbsp;&nbsp; ji&nbsp; j&nbsp;&nbsp;&nbsp;&nbsp; i&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; i
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; j</font></tt></pre>
+<font face="Arial,Helvetica">Where a<sub>j</sub> is the activation unit
+j and w<sub>ji</sub> is the connection weight from unit j to unit i. The
+function f is different for different types of units. The NICO toolkit
+supports several different unit types:</font>
+<ul TYPE=CIRCLE>
+<li>
+<font face="Arial,Helvetica">Linear units -- the identity function (f(x)=x)</font></li>
+
+<li>
+<font face="Arial,Helvetica">Tanhyp units -- f(x) = tanhyp(x)</font></li>
+
+<li>
+<font face="Arial,Helvetica">Arctan units -- f(x) = arctan(x)</font></li>
+
+<li>
+<font face="Arial,Helvetica">Sigmoid units -- f(x) = 1 / (1 - exp(-x))</font></li>
+
+<li>
+<font face="Arial,Helvetica">Exponential units f(x) = exp(x)</font></li>
+
+<li>
+<font face="Arial,Helvetica">Inverter units f(x) = 1/x</font></li>
+</ul>
+<font face="Arial,Helvetica">Multiplication units compute their activation
+value by:</font>
+<br><tt><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; __</font></tt>
+<br><tt><font size=-1>a&nbsp; =&nbsp; ||&nbsp; a</font></tt>
+<br><tt><font size=-1>&nbsp;i&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+j</font></tt>
+<br><font face="Arial,Helvetica">i.e., independent of the connection weights.</font>
+<p><font face="Arial,Helvetica">This is the syntax for the function that
+creates units:</font>
+<pre><tt><font size=-1>USAGE: AddUnit [options] Name Net
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Option&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Default
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -u number Add multiple unnamed units. 'Name' is the parent&nbsp; (off)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -S File&nbsp;&nbsp; Add multiple named units, 'Name' is the parent&nbsp;&nbsp;&nbsp; (off)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -i&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Add input unit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (hidden)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -o&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Add output unit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (hidden)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -s&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Add tanhyp unit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (default)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -t&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Add arctan unit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (tanhyp)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -l&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Add linear unit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (tanhyp)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -f&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Add filefilter unit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (tanhyp)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -e&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Add environment unit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (tanhyp)
+</font></tt><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -r float&nbsp; Bound on random init of bias&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (0.10)</font></pre>
+
+<h2>
+Layers of units</h2>
+<font face="Arial,Helvetica">The most common use of AddUnit is to add a
+set of units as members of a group. This is done with the -u option. For
+example:</font>
+<ul><tt>AddUnit -u17 my_group my_net.rtdnn</tt></ul>
+<font face="Arial,Helvetica">adds 17 unnamed units to the group "my_group"
+in the network "my_net.rtdnn".</font>
+<p><font face="Arial,Helvetica">Units optionally have names in the NICO
+toolkit. This is useful if a unit have some special function in the network.
+Then this individual unit can be referred to in, for example, connection
+commands, or it can be individually selected for output in the Excite command.
+The following command adds one unit named "Charlie" to the network:</font>
+<ul>AddUnit Charlie my_net.rtdnn</ul>
+
+<h2>
+Special purpose unit types</h2>
+<font face="Arial,Helvetica">The activity of an <i>environment unit</i>
+depends on the system environment variable with the name of the unit. For
+example, the command:</font>
+<ul><tt>AddUnit -e MYSWITCH my_net.rtdnn</tt></ul>
+<font face="Arial,Helvetica">adds an environment unit that is dependent
+on the environment variable MYSWITCH. If the value of the environment variable
+is numerical, it is copied to the unit's activation. Otherwize the activation
+is 1.0 for defined variables and 0.0 for undefined variables.</font>
+<p><font face="Arial,Helvetica">A <i>filefilter unit</i> gets the activation
+1.0 if the unit's name is a substring of the base name of the current external
+data file. Oterwize the unit's activation is 0.0. This can be useful if
+the datafiles have names that indicates special properties of the data.
+In speech applications for example, the speakers identity is often coded
+by a few letters or a number in the filename.</font>
+<p><font face="Arial,Helvetica">All networks have a special-purpose unit
+with name <i>bias</i>. The bias unit always have activation 1.0. and units
+are by default connected to this unit when they are created (except input,
+filefilter and environment units). The -r option controls this connection.
+The connection strength is a square distributed random variable. The option:
+-rX, specifies the range of this varible to [-X; +X]. If the option is
+given with a zero argument (-r0.0) the connetion is not created at all.</font>
+<br>&nbsp;
+<h2>
+Other primitive unit types</h2>
+<font face="Arial,Helvetica">Most unit types can be selected by the switches
+of the AddUnit command. However, a few types can only be selected by the
+SetType command. The SetType command can also be used to change the error
+function of output units. The syntax is:</font>
+<pre><tt><font size=-1>USAGE: SetType [option] Unit Net
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Option&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Default
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -o&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Change to an output unit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (off)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Change to a non-output unit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (off)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -i&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Change to an input unit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (off)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -O efun Change to an output unit with specified error function
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; efun = ('0/1' L2, L4, L10, 'abs', 'cross0/1'
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 'interact', 'cross' or 'noerr'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (off)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -t&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Change to a tanhyp unit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (off)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -a&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Change to an arctan unit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (off)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -s&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Change to a sigmoid unit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (off)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -l&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Change to a linear unit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (off)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -m&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Change to a multiplication unit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (off)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -d&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Change to a inverter (1/x) unit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (off)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -x&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Change to a exponential e(x) unit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (off)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -e&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Change to a environment unit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (off)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -f&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Change to a filefilter unit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (off)</font></tt></pre>
+
+<h2>
+Complex unit types</h2>
+<font face="Arial,Helvetica">By combining the primitive unit types supported
+by the tool-kit, many other complex units can be created. For example,
+a unit that is the square of another unit's activation can easily be constructed.
+Let's say we have a unit called "x" in the network "my_net.rtdnn". The
+following commands creates a new unit "x2" that is the square of "x".</font>
+<ul><tt>AddUnit -r0 -l tmp my_net.rtdnn</tt>
+<br><tt>Connect -w1.0 x tmp my_net.rtdnn</tt>
+<br><tt>AddUnit -r0 x2 my_net.rtdnn</tt>
+<br><tt>SetType -m x2 my_net.rtdnn</tt>
+<br><tt>Connect -w1.0 x x2 my_net.rtdnn</tt>
+<br><tt>Connect -w1.0 tmp x2 my_net.rtdnn</tt></ul>
+<font face="Arial,Helvetica">In the same spirit, we can construct a group
+of units with the <i>softmax</i> activation function (this example requires
+understanding of groups, expalined in the <a href="groups.html">groups
+section </a>). Let's say we need a group of five softmax units called softmax.
+The following commands creates two groups, the first, called input, has
+five exponential units that should be connected to, and the second group,
+called output, has five multiplication units that have the softmax activation
+values.</font>
+<ul><tt>AddGroup input my_net.rtdnn</tt>
+<br><tt>AddUnit -u5 input my_net.rtdnn</tt>
+<br><tt>SetType -x input my_net.rtdnn</tt>
+<br><tt>AddGroup output my_net.rtdnn</tt>
+<br><tt>AddUnit -u5 output my_net.rtdnn</tt>
+<br><tt>SetType -m output my_net.rtdnn</tt>
+<br><tt>AddUnit softsum my_net.rtdnn</tt>
+<br><tt>SetType -d softsum my_net.rtdnn</tt>
+<br><tt>Connect -w1.0 input softsum my_net.rtdnn</tt>
+<br><tt>Connect -w1.0 softsum output my_net.rtdnn</tt>
+<br><tt>Pipe -w1.0 input output my_net.rtdnn</tt></ul>
+<font face="Arial,Helvetica">The unit "softsum" computes the sum of all
+units in the input group and inverts (1/x) this sum. The multiplication
+units in the group "output" then normalizes the activations by multiplying
+with the activity of "softsum". Using concepts explained in the <a href="groups.html">groups
+section </a>we finish our softmax example by encapsulating it in a supergroup
+called softmax.</font>
+<ul><tt>AddGroup softmax my_net.rtdnn</tt>
+<br><tt>AddGroup internal my_net.rtdnn</tt>
+<br><tt>Move internal network softmax my_net.rtdnn</tt>
+<br><tt>Move input network softmax my_net.rtdnn</tt>
+<br><tt>Move output network softmax my_net.rtdnn</tt>
+<br><tt>Move softsum network softmax.internal my_net.rtdnn</tt>
+<br><tt>Protect -P softmax.internal my_net.rtdnn</tt>
+<br><tt>Protect -R softmax.input my_net.rtdnn</tt>
+<br><tt>Protect -S softmax.output my_net.rtdnn</tt></ul>
+<font face="Arial,Helvetica">Now the group "softmax" can be treated as
+a group with one single layer of softmax units.</font>
+
+</body>
+</html>

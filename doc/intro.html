@@ -1,0 +1,169 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.7 [en] (WinNT; U) [Netscape]">
+   <title>Introduction</title>
+</head>
+<body bgcolor="#FFFFFF">
+
+<center>
+<h1>
+<font size=+2>INTRODUCTION</font></h1></center>
+<font face="Arial,Helvetica">Reading this manual requires some knowledge
+of the theory and terminology of the artifical neural network field. The
+<i><a href="ftp://ftp.sas.com/pub/neural/FAQ.html" TARGET="_top">FAQ of
+the newsgroup comp.ai.neural-nets</a></i> is one place on the web to start
+looking.</font>
+<p><font face="Arial,Helvetica">There is also an excellent <a href="http://svr-www.eng.cam.ac.uk/~ajr/rnn4csr94/rnn4csr94.html">on-line
+paper </a>by Tony Robinson, Mike Hochberg and Steve Renals, about the ABBOT,
+hybrid HMM/ANN system.</font>
+<p><font face="Arial,Helvetica">
+
+<p><font face="Arial,Helvetica">All tools in the NICO toolkit are commands
+that can by entered at the shell prompt or run from a shell script. If
+a command is run without any arguments, the syntax of that command is printed
+together with a brief description of the command's options and their default
+values.</font>
+<p><font face="Arial,Helvetica">The tools of the NICO toolbox can be divided
+into the following broad classes:</font>
+<li>
+<i><font face="Arial,Helvetica"><a href="#build">Building tools </a>--
+Defining the network topology, specifying I/O formats etc.</font></i></li>
+
+<li>
+<i><font face="Arial,Helvetica"><a href="#train">Training tools</a> --
+Normalizing the input data, back-prop training, pruning etc.</font></i></li>
+
+<li>
+<i><font face="Arial,Helvetica"><a href="#eval">Evaluation tools</a> --
+Running the network, Classification evaluation etc.</font></i></li>
+
+<br>&nbsp;
+<h2>
+<a NAME="build"></a>Building tools</h2>
+<font face="Arial,Helvetica"><font size=-1>I</font>t is good practice to
+make shell scripts with building tools that defines the network topology.
+For example, Figure 1 shows a network and a shell script that was used
+to construct it.</font>
+<br>&nbsp;
+<table>
+<tr>
+<td><img SRC="introfig.gif" VSPACE=20 height=277 width=391></td>
+
+<td>
+<pre><font size=-1>#!/bin/sh
+
+NET=my_net.rtdnn
+
+INPDIM=10
+HIDDENSIZE=20
+OUTDIM=5
+
+CreateNet $NET $NET
+
+AddGroup input $NET
+AddUnit -i -u $INPDIM input $NET
+
+AddGroup hidden $NET
+AddUnit -u $HIDDENSIZE hidden $NET
+
+AddGroup output $NET
+AddUnit -o -u $OUTDIM output $NET
+
+Connect input hidden $NET
+Connect hidden output $NET
+
+AddStream $INPDIM r INPUT $NET
+LinkGroup INPUT input $NET
+
+AddStream $OUTDIM t OUTPUT $NET
+LinkGroup OUTPUT output $NET</font></pre>
+</td>
+</tr>
+</table>
+<b><i><font face="Arial,Helvetica">Figure 1. A simple three-layer network
+and a script file that created it.</font></i></b>
+<p><font face="Arial,Helvetica">Let's look at the commands in the shell
+script from the top to the bottom. The first NICO command is <i>CreateNet</i>.
+It simply creates a network definition file for a new network. The second
+argument is the file name.</font>
+<p><font face="Arial,Helvetica">The second NICO command is <i>AddGroup</i>.
+It adds a new group to the created network. A group is an object that can
+have units or other groups as members. The next command is <i>AddUnit</i>.
+It creates unit(s) and puts them in a specified group. After this first
+AddUnit command, the network consists of a group named "input" containing
+10 units (the -i option to AddUnit specified that it is input units and
+the -u option specified that 10 units should be created).</font>
+<p><font face="Arial,Helvetica">The next two commands, AddGroup and AddUnit,
+creates another group holding 20 hidden units and then the last group,
+the output group is created with 5 output units (the -o option specifies
+that is output units).</font>
+<p><font face="Arial,Helvetica">Now, adding connections from units in the
+input group to the hidden units and from the hidden units to the output
+units is a simple matter. The two <i>Connect</i> commands does just that.</font>
+<p><font face="Arial,Helvetica">Finally we need to connect our network
+to the outside world. In the NICO toolkit this is taken care of by stream
+objects. Here we add one input stream and one output stream with the two
+<i>AddStream</i>
+commands. The <i>LinkGroup</i> commands tells the network which units should
+be associated with which stream.</font>
+<p><font face="Arial,Helvetica">For the network to be useful, some more
+information must be specified. The data format, directory and file extension
+for each stream should be specified (see AddStream and EditStream).</font>
+<p><font face="Arial,Helvetica">The command <i>Display</i> is useful for
+examining a network definition file. If no options are given (Display my_net.rtdnn),
+a brief description is printed. But Display has many options to explore
+all properties the networks.</font>
+<p><font face="Arial,Helvetica">Here is a list of some useful building
+tools:</font>
+<li>
+<font face="Arial,Helvetica">Create objects: CreateNet, AddGroup, AddUnit,
+AddStream</font></li>
+
+<li>
+<font face="Arial,Helvetica">Link units to streams: LinkGroup, LinkUnit</font></li>
+
+<li>
+<font face="Arial,Helvetica">Create connections: Connect, Pipe</font></li>
+
+<li>
+<font face="Arial,Helvetica">Manage groups: Copy, Move, Import, Rename,
+Join, UnJoin</font></li>
+
+<li>
+<font face="Arial,Helvetica">Set properties: SetType, SetPlast, Protect</font></li>
+
+<li>
+<font face="Arial,Helvetica">Display network properties: Display</font></li>
+
+<br>&nbsp;
+<h2>
+<a NAME="train"></a>Training tools</h2>
+<font face="Arial,Helvetica">The NICO toolkit has only one main training
+tool: <i>BackProp</i>. It runs backpropagation through time. However, we
+have put a few other commands in this group. The most important is <i>NormStream</i>.
+Most external data is not in the range suitable for ANN computation. Therefore
+the best results are achieved when the external data is normalized to the
+range [-1; 1]. From my experience, the -d option (standard deviation based
+normalization) gives the best results.</font>
+<p><font face="Arial,Helvetica">Here is a list of training tools in the
+NICO toolkit:</font>
+<li>
+<font face="Arial,Helvetica">BackProp, NormStream, Prune, KickNet, NormGroup</font></li>
+
+<br>&nbsp;
+<h2>
+<a NAME="eval"></a>Evaluation Tools</h2>
+<font face="Arial,Helvetica">Several tools for evaluating and running a
+trained network are available. The main tool for running a network is <i>Excite</i>.
+It reads input streams, excites the network and outputs the output streams
+or a selection of unit activities.</font>
+<p><font face="Arial,Helvetica"><i>CResult</i> is a tool for evaluating
+classification performance. It has many analysis options such as confusion
+matrix and "within top-N".</font>
+<p><font face="Arial,Helvetica">These are the evaluation tools:</font>
+<li>
+<font face="Arial,Helvetica">Excite, CResult</font></li>
+</body>
+</html>

@@ -2,44 +2,60 @@
 /*                 Functions related to the operating system                 */
 /* ------------------------------------------------------------------------- */
 /*                                                                           */
-/*   Copyright (C) 1994, 1995, 1996, 1997, 1998 Nikko Ström                  */
+/*   Copyright (C) 1994, 1995, 1996, 1997, 1998 Nikko Strom                  */
 /*                                                                           */
 /*   All rights reserved.                                                    */
 /*                                                                           */
-/*   Developed by Nikko Ström at the Dept. of Speech, Music and Hearing,     */
+/*   Developed by Nikko Strom at the Dept. of Speech, Music and Hearing,     */
 /*   KTH (Royal Institute of Technology)                                     */
 /*                                                                           */
-/*   Nikko Ström, nikko@speech.kth.se                                        */
+/*   http://www.speech.kth.se                                                */
 /*                                                                           */
 /*                                                                           */
 /*   KTH                                                                     */
-/*   Institutionen för Tal, musik och hörsel                                 */
+/*   Institutionen for Tal, musik och horsel                                 */
 /*   S-100 44 STOCKHOLM                                                      */
 /*   SWEDEN                                                                  */
 /*                                                                           */
-/*   http://www.speech.kth.se/                                               */
+/*   Project web site: http://nico.sourceforge.net/                          */
 /*                                                                           */
 /* ------------------------------------------------------------------------- */
 /*                                                                           */
 /*         This software is part of the NICO toolkit for developing          */
 /*                  Recurrent Time Delay Neural Networks                     */
 /*                                                                           */
-/* Permission to use, copy, or modify these programs and their documentation */
-/* for educational and research purposes only and without fee is hereby      */
-/* granted, provided that this copyright and permission notice appear on all */
-/* copies and supporting documentation.  For any other uses of this software,*/
-/* in original or modified form, including but not limited to distribution   */
-/* in whole or in part, specific prior permission from the copyright holder  */
-/* must be obtained. The copyright holder makes no representations about the */
-/* suitability of this software for any purpose. It is provided "as is"      */
-/* without express or implied warranty.                                      */
+/* Redistribution and use in source and binary forms, with or without        */
+/* modification, are permitted provided that the following conditions        */
+/* are met:                                                                  */
+/*     * Redistributions of source code must retain the above copyright      */
+/*       notice, this list of conditions and the following disclaimer.       */
+/*     * Redistributions in binary form must reproduce the above copyright   */
+/*       notice, this list of conditions and the following disclaimer in     */
+/*       the documentation and/or other materials provided with the          */
+/*       distribution.                                                       */
+/*     * Neither the name of KTH or Institutionen for Tal, musik och         */
+/*       horsel nor the names of its contributors may be used to endorse     */
+/*       or promote products derived from this software without specific     */
+/*       prior written permission.                                           */
+/*                                                                           */
+/* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS       */
+/* "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT         */
+/* LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR     */
+/* A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT      */
+/* OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,     */
+/* SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  */
+/* TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR    */
+/* PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF    */
+/* LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING      */
+/* NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS        */
+/* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.              */
 /*                                                                           */
 /* ------------------------------------------------------------------------- */
 
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <strings.h>
+#include <string.h>
 #include <ctype.h>
 #include <malloc.h>
 #include <math.h>
@@ -47,7 +63,7 @@
 #include <sys/times.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <sys/time.h>
+#include <time.h>
 #include <unistd.h>
 #include <limits.h>
 #include <stdarg.h>
@@ -89,12 +105,12 @@ Extract(char *in, char *dir, char *name, char *ext) {
   
   k = strlen(in) - 1;      
 
-  for (i = k; in[i] != '.' && i >= 0; i--);
+  for (i = k; i >= 0 && in[i] != '.'; i--);
   if (i == -1) i = k + 1;
   memcpy(ext, in + i + 1, sizeof(char) * (k - i + 1)); 
   ext[k - i + 1] = '\0'; 
 
-  for (j = k; in[j] != '/' && j >= 0; j--);
+  for (j = k; j >= 0 && in[j] != '/'; j--);
   memcpy(name, in + j + 1, sizeof(char) * (i - j - 1));
   name[i - j - 1] = '\0'; 
 
@@ -317,7 +333,6 @@ ReadString(FILE *fp) {
   char s[512], *r;
 
   fread(&size0, sizeof(unsigned char), 1, fp);
-  if (size0 > 512) ErrorExit(SYSTEM_ERR_EXIT, "Attempt to read string > 512 characters");
   size = (int)size0;
   fread(s, sizeof(char), size, fp);
 
@@ -409,7 +424,6 @@ swap_8bytes(char *bytes, int n) {
 }
 
 
-
 /* Returns 0 if the byte order is big endian, 1 if it is little endian */
 static short lowbyteisoneandhighbyteiszero = 1;
 int 
@@ -465,8 +479,6 @@ ReadInts16(short *i, int n, FILE *fp, int little_endian) {
 
   return m;
 }
-
-
 
 
 /* --------------
@@ -667,23 +679,6 @@ WriteDoubles(double *i, int n, FILE *fp) {
   m = fwrite(i, sizeof(double), n, fp);
 
   if (SWAP_BYTE_ORDER) swap_8bytes((char *)i, n);
-
-  return m;
-}
-
-
-
-/* Convenience function to read big endian Shorts
- * Same effect as ReadShorts */ 
-
-/* By Erland Lewin */
-int 
-ReadShortsBigEndian(short *i, int n, FILE *fp) 
-{
-  int m = fread(i, sizeof(short), n, fp);
-	
-  /* if the native byte order is not big endian, then we must swap the bytes */
-  if( GetNativeByteOrder() == 1 ) swap_2bytes((char *)i, n);
 
   return m;
 }

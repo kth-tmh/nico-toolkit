@@ -1,11 +1,11 @@
 #! /bin/csh -f
 
- # set this variable to the directory of the TIMIT database   
-set TIMITDIR = /mnt/cdrom/timit  
+# set this variable to the directory of the TIMIT database   
+set TIMITDIR = /media/cdrom/timit/
 
- # set these variables to where you want to store links to   
- # wave-form files and phoneme label files  
-set LINKDIR = .
+# set these variables to where you want to store links to   
+# wave-form files and phoneme label files  
+set LINKDIR = `pwd`
 
 set WAVEDIR = $LINKDIR/waveform   
 set PHONEDIR = $LINKDIR/phnlab   
@@ -22,11 +22,11 @@ foreach DIALECT ( ${CATEGORY}/dr? )
   foreach SPEAKER ( * )   
     pushd ${SPEAKER}   
     foreach FILE ( *.wav )   
-      #ln -s ${DIALECT}/${SPEAKER}/${FILE} $WAVEDIR/${SPEAKER}_${FILE}
+      ln -s ${DIALECT}/${SPEAKER}/${FILE} $WAVEDIR/${SPEAKER}_${FILE}
       echo ${SPEAKER}_$FILE | sed s/\.wav// >> $LINKDIR/trainutts
     end
     foreach FILE ( *.phn )   
-      #ln -s ${DIALECT}/${SPEAKER}/${FILE} $PHONEDIR/${SPEAKER}_${FILE}
+      ln -s ${DIALECT}/${SPEAKER}/${FILE} $PHONEDIR/${SPEAKER}_${FILE}
     end   
     popd   
   end   
@@ -39,11 +39,11 @@ foreach DIALECT ( ${CATEGORY}/dr? )
   foreach SPEAKER ( * )   
     pushd ${SPEAKER}   
     foreach FILE ( *.wav )   
-      #ln -s ${DIALECT}/${SPEAKER}/${FILE} $WAVEDIR/${SPEAKER}_${FILE}
+      ln -s ${DIALECT}/${SPEAKER}/${FILE} $WAVEDIR/${SPEAKER}_${FILE}
       echo ${SPEAKER}_$FILE | sed s/\.wav// >> $LINKDIR/testutts
     end
     foreach FILE ( *.phn )   
-      #ln -s ${DIALECT}/${SPEAKER}/${FILE} $PHONEDIR/${SPEAKER}_${FILE}
+      ln -s ${DIALECT}/${SPEAKER}/${FILE} $PHONEDIR/${SPEAKER}_${FILE}
     end   
     popd   
   end   

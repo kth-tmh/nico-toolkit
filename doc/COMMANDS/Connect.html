@@ -1,0 +1,102 @@
+<HTML>
+
+<BODY BGCOLOR=#ffffff>
+
+
+<FONT SIZE=4>
+<FONT SIZE=+1>N<FONT SIZE=-1>AME: Connect
+
+<P><FONT SIZE=2>
+
+
+<P>
+<FONT SIZE=+1>S<FONT SIZE=-1>YNOPSIS:<FONT SIZE=2>
+
+Connect [options] From To Net
+
+<P>
+<FONT SIZE=+1>D<FONT SIZE=-1>ESCRIPTION<FONT SIZE=+1><P><FONT SIZE=2>
+
+Connect is the main command for creating connections between the units
+in a network. It creates connections between the two objects specified by 
+the "From" and "To" arguments. "From" and "To" can be groups or units and
+all connections are created between all units in or under them (Unless
+protected, see <A HREF=Protect.html>Protect</A>).
+
+
+<P>
+<FONT SIZE=+1>O<FONT SIZE=-1>PTIONS<P>
+<TABLE>
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-d delay
+</TD>
+<TD><FONT SIZE=2>
+Delays connections "delay" time-units, where "delay" is a positive or negative
+integer. A negative time-delay is a look-ahead. Look-ahead connections are
+allowed in the NICO tolkit as long as no unit's activation depends on the
+same unit's activation at present or future times.
+</TD></TR>
+
+
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-D low high
+</TD>
+<TD><FONT SIZE=2>
+Use this option to create a window of dynamic connections for the "To" units.
+Connections with all time-delays from "low" to "high" are created.
+</TD></TR>
+
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-r bound
+</TD>
+<TD><FONT SIZE=2>
+By default, the connection weights are initialized by a square
+distributed random number R[-0.1;0.1]. This option controls the min. and max.
+values of the distibution (R[-bound;bound]).
+</TD></TR>
+
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-s fraction
+</TD>
+<TD><FONT SIZE=2>
+Sparse connection. Only a random selection of the specified connections are
+realized. 'fraction' is the % of the connctions that are created. Useful to
+bring down the number of connections in large networks without reducing the
+number of units.  
+</TD></TR>
+
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-2
+</TD>
+<TD><FONT SIZE=2>
+2-way connection. I.e, connect also from "To" to "From". This is only
+possible with true time-delayed connections.
+</TD></TR>
+
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-w weight
+</TD>
+<TD><FONT SIZE=2>
+Connect with constant connection weight. "weight" specifies the connection
+weight and overrides the random initialization of connection weights.
+Connections created in this way have by default plasticity 0.0.
+<TD><FONT SIZE=2>
+</TD></TR>
+
+
+</TABLE>
+
+
+<P>
+<FONT SIZE=+1>S<FONT SIZE=-1>EE<FONT SIZE=+1> 
+<FONT SIZE=+1>A<FONT SIZE=-1>LSO<FONT SIZE=+1><P><FONT SIZE=2>
+
+
+
+<A HREF=Pipe.html>Pipe</A>, 
+<A HREF=Metricnct.html>Metricnct</A>, 
+<A HREF=MakeDiff.html>MakeDiff</A>, 
+<A HREF=MakeCep.html>MakeCep</A>
+
+
+</BODY>

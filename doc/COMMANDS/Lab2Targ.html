@@ -1,0 +1,216 @@
+<HTML>
+
+<BODY BGCOLOR=#ffffff>
+
+
+<CENTER>
+<FONT SIZE=4>
+<FONT SIZE=+1>N<FONT SIZE=-1>AME: Lab2Targ
+</CENTER>
+
+<P><FONT SIZE=2>
+
+
+<P>
+<FONT SIZE=+1>S<FONT SIZE=-1>YNOPSIS: <FONT SIZE=2>
+
+Lab2Targ [options] LabelListFile InputSize InputFile
+
+
+<P>
+<FONT SIZE=+1>D<FONT SIZE=-1>ESCRIPTION<P><FONT SIZE=2>
+The command Lab2Targ converts phonetic label files to activation target
+values in a file format that can be read by streams of a network.
+The names of the phonemes and their order is specified by the file:
+'LabelListFile', a text file with one phoneme name per row. When Lab2Targ
+reads a label file, it compares the labels of the label file with the
+phoneme names. If the label is found, the respective target value is set
+to 1.0 for all frames covered by that phoneme. All other targets get the
+value 0.0. Use the same file 'LabelListFile' when creating the output units
+of the network to be sure that the phonemes are in the right order (see
+the -S option of the <A HREF=AddUnit.html>AddUnit</A> command).
+The number of target values per frame is given by the number of rows in
+'LabelListFile', but to create a target file, the command also needs to
+know the number of frames of the utterance. Therefore you need
+to give the datafile of one arbitrary other stream of the network 
+(for example an input stream) and the size of this stream. That's the
+arguments 'InputSize' and 'InputFile'. Typically, you use the Melfib command
+to create the input feature files first and then run this command to create
+the output targets. In that case, 'InputSize' is the number of filters and
+InputFile is the filterbank feature file. Following the convention
+of the toolkit, all data files for the same utterance have the same basename
+the filename of the created target file is constructed from 'InputFile'. 
+
+<P>
+<FONT SIZE=+1>O<FONT SIZE=-1>PTIONS<P>
+<TABLE>
+
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-S
+</TD>
+<TD><FONT SIZE=2>
+This option changes the interpretation of the argument 'InputFile'.
+With the -S option specified, the inputfiles are taken from file names from 
+the rows of the script file 'InputFile'. Otherwize 'InputFile' is itself a 
+filename. 
+</TD></TR>
+
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-x ext
+</TD>
+<TD><FONT SIZE=2>
+Sets the file extension for output target files. The default extension is:
+"targ".
+</TD></TR>
+
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-d dir
+</TD>
+<TD><FONT SIZE=2>
+Sets the directory for output target files. The default is the current
+directory.
+</TD></TR>
+
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-q ext
+</TD>
+<TD><FONT SIZE=2>
+Specifies the file extension for label files. The default extension is:
+"lab".
+</TD></TR>
+
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-p dir
+</TD>
+<TD><FONT SIZE=2>
+Specifies the directory for label files. The default is the current
+directory.
+</TD></TR>
+
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-Q ext
+</TD>
+<TD><FONT SIZE=2>
+Specifies the file extension for input files (no default extension).
+</TD></TR>
+
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-P dir
+</TD>
+<TD><FONT SIZE=2>
+Specifies the directory for input files. The default is the current
+directory.
+</TD></TR>
+
+</TABLE>
+
+<P>
+Options for fileformats
+<TABLE>
+
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-F format
+</TD>
+<TD><FONT SIZE=2>
+Sets output format for target files. 'format' is: binary, ascii, htk,
+etc.). See the reference section <A HREF=../fileform.html>File formats</A>
+for details and a complete list of supported parameter file formats.  
+</TD></TR>
+
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-L format
+</TD>
+<TD><FONT SIZE=2>
+Specifies label file format. 'format' is: mix, htk, etc.). 
+See the reference section <A HREF=../fileform.html>File formats</A>
+for details and a complete list of supported label file formats.  
+</TD></TR>
+
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-I format
+</TD>
+<TD><FONT SIZE=2>
+Specifies file format of input files. 'format' is: binary, ascii, htk,
+etc.). See the reference section <A HREF=../fileform.html>File formats</A>
+for details and a complete list of supported parameter file formats.  
+</TD></TR>
+
+</TABLE>
+
+<P>
+Options specifying target generation
+<TABLE>
+
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-e win
+</TD>
+<TD><FONT SIZE=2>
+Suspend normal target generation and generate instead a parameter file
+with only one target per frame that's 1.0 at segment borders 0.0 in the
+interior of segments and 0.5 in windows centered ar borders. The windows
+have their width specified by 'win' in frames.
+</TD></TR>
+
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-f matrix 
+</TD>
+<TD><FONT SIZE=2>
+Suspend normal target generation and generate instead a feature
+representation of the phonemes. the translation from phoneme to features
+is given by the file 'matrix' with one row per phoneme and the target
+values specified by the values respective row, i.e., the number of features
+is equal to the number of columns of the matrix.
+</TD></TR>
+
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-i label 
+</TD>
+<TD><FONT SIZE=2>
+Implicit label. If, for a frame, no target is > 0.5, then the phoneme
+with name 'label' is implicitly "on" and gets the target 1.0 (or the value
+given by the -1 option).
+</TD></TR>
+
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-D num 
+</TD>
+<TD><FONT SIZE=2>
+Delay all targets 'num' frames.
+</TD></TR>
+
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-1 high
+</TD>
+<TD><FONT SIZE=2>
+Value for phonemes that are "on". The default is 1.0. 
+
+</TD></TR>
+
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-0 low
+</TD>
+<TD><FONT SIZE=2>
+Value for phonemes that are "off". The default is 0.0. 
+</TD></TR>
+
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-l scale
+</TD>
+<TD><FONT SIZE=2>
+Label time scale (samples/frame). The default is 160, corresponding to a
+sample rate of 16kHz and a frame step of 10 ms.
+</TD></TR>
+
+<TR><TD WIDTH=170 VALIGN=TOP><FONT SIZE=2>
+-o offset
+</TD>
+<TD><FONT SIZE=2>
+Label time offset (samples). Can be used to shift phoneme boundaries if
+the feature representation is not correctly aligned (if frames don't start at
+the correct sample). Should not be necessary if 
+<A HREF=Melfib.html>Melfib</A> is used.
+</TD></TR>
+
+</TABLE>
+
+</BODY>
