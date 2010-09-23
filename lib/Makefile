@@ -4,7 +4,7 @@ CFLAGS	= $(OPT) -Wall
 
 modules = AudioData.o LabelData.o RTDNN.o Speetures.o \
 	Command.o LogBook.o RTSim.o Sphere.o \
-	Display.o Math.o Signal.o StdHead.o \
+	Display.o nMath.o Signal.o StdHead.o \
 	Goodies.o ParamData.o Simulation.o System.o
 
 all: libnico.a
@@ -21,7 +21,7 @@ clean:
 ##
 modules_g = AudioData_g.o LabelData_g.o RTDNN_g.o Speetures_g.o \
 	Command_g.o LogBook_g.o RTSim_g.o Sphere_g.o \
-	Display_g.o Math_g.o Signal_g.o StdHead_g.o \
+	Display_g.o nMath_g.o Signal_g.o StdHead_g.o \
 	Goodies_g.o ParamData_g.o Simulation_g.o System_g.o
 
 
@@ -39,7 +39,7 @@ debug: libnico_g.a
 ##
 modules_p = AudioData_p.o LabelData_p.o RTDNN_p.o Speetures_p.o \
 	Command_p.o LogBook_p.o RTSim_p.o Sphere_p.o \
-	Display_p.o Math_p.o Signal_p.o StdHead_p.o \
+	Display_p.o nMath_p.o Signal_p.o StdHead_p.o \
 	Goodies_p.o ParamData_p.o Simulation_p.o System_p.o
 
 

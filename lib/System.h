@@ -193,14 +193,14 @@ int WriteDoubles(double *i, int n, FILE *);
 
 /* Some def's for convenient file handeling and memory allocation */
 
-#define FOPEN(FP, NAME, MODE)  { \
+#define nFOPEN(FP, NAME, MODE)  { \
   if (!(FP = fopen(NAME, MODE))) { \
     ErrorExit(0, "Cannot open %s. (mode = %s).", NAME, MODE); \
   } \
 }
 
 
-#define FCLOSE(FP)  { \
+#define nFCLOSE(FP)  { \
   if (fclose(FP) == EOF) { \
     ErrorExit(-1, "in file %s, line %i: Cannot close file pointer %s.", \
       __FILE__, __LINE__, #FP); \

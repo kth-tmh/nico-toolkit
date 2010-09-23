@@ -57,7 +57,7 @@
 #include "RTDNN.h"
 #include "System.h"
 #include "Command.h"
-#include "Math.h"
+#include "nMath.h"
 
 
 void 

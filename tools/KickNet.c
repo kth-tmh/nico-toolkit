@@ -56,7 +56,7 @@
 #include <math.h>
 #include <string.h>
 #include <unistd.h>
-#include "Math.h"
+#include "nMath.h"
 #include "RTDNN.h"
 #include "Command.h" 
 #include "System.h" 

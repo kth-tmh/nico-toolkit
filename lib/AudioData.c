@@ -99,9 +99,9 @@ AudioFileType GuessAudioFileType(char *fn) {
   FILE *fp;
   long magic;
 
-  FOPEN(fp, fn, "r")
+  nFOPEN(fp, fn, "r")
   magic = ReadInt32(fp, 0);
-  FCLOSE(fp)
+  nFCLOSE(fp)
 
   if (magic == SUNAUMagicNum) return SUN_AU;
 
@@ -140,11 +140,11 @@ OpenAudioFile(char *fn, AudioFileType format, char *mode) {
 
   if (strcmp(mode, "r") == 0) {
     if (strcmp(fn, "stdin") == 0) fp = stdin;
-    else FOPEN(fp, fn, mode);
+    else nFOPEN(fp, fn, mode);
   }
   else if (strcmp(mode, "w") == 0) {
     if (strcmp(fn, "stdout") == 0) fp = stdout;
-    else FOPEN(fp, fn, mode);
+    else nFOPEN(fp, fn, mode);
   }
   else ErrorExit(SYSTEM_ERR_EXIT, 
 		 "Only \"r\" and \"w\" are allowed modes for OpenAudioFile.");
@@ -414,7 +414,7 @@ CloseAudioFile(AUDIO_FILE *afp) {
 
   FREE(afp->fn);
   FREE(afp->mode);
-  FCLOSE(afp->fp);
+  nFCLOSE(afp->fp);
   FREE(afp);
 }
 

@@ -60,7 +60,7 @@
 #include "System.h"
 #include "Signal.h"
 #include "Speetures.h"
-#include "Math.h"
+#include "nMath.h"
 
 /* ------------------  Bark Filter-bank implementation  -------------------- */
 

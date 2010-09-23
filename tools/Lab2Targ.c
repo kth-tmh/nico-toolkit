@@ -440,9 +440,9 @@ main(int argc, char *argv[]) {
     NumFeatures = 0;
     Fmat = LoadParameters(Features, ASCII, &NumOut, &NumFeatures);
     for (k = 0; k < NumFiles; k++) { 
-      FOPEN(fp, LabList[k], "r")
+      nFOPEN(fp, LabList[k], "r")
       list = ReadLabels(fp, label_format);
-      FCLOSE(fp);
+      nFCLOSE(fp);
 
       T = 0;
       /* Just to get T */
@@ -456,9 +456,9 @@ main(int argc, char *argv[]) {
   }
   else {
     for (k = 0; k < NumFiles; k++) { 
-      FOPEN(fp, LabList[k], "r")
+      nFOPEN(fp, LabList[k], "r")
       list = ReadLabels(fp, label_format);
-      FCLOSE(fp);
+      nFCLOSE(fp);
 
       T = 0;
       /* Just to get T */

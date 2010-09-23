@@ -59,7 +59,7 @@
 #include <unistd.h>
 #include "System.h"
 #include "ParamData.h"
-#include "Math.h"
+#include "nMath.h"
 
 /* Conversion from the string to the code description of param formats */
 ParamFileType Str2ParamType(char *s) {
@@ -105,10 +105,10 @@ OpenParameterFile(char *fn, ParamFileType format,
     if (strcmp(fn, "stdin") == 0) fp = stdin;
     else {
       if (format == ASCII) {
-	FOPEN(fp, fn, "r");
+	nFOPEN(fp, fn, "r");
       }
       else {
-	FOPEN(fp, fn, "rb");
+	nFOPEN(fp, fn, "rb");
       }
     }
   }
@@ -116,10 +116,10 @@ OpenParameterFile(char *fn, ParamFileType format,
     if (strcmp(fn, "stdout") == 0) fp = stdout;
     else  {
       if (format == ASCII) {
-	FOPEN(fp, fn, "w");
+	nFOPEN(fp, fn, "w");
       }
       else {
-	FOPEN(fp, fn, "wb");
+	nFOPEN(fp, fn, "wb");
       }
     }
   }
@@ -308,7 +308,7 @@ CloseParameterFile(PARAM_FILE *pfp) {
     default: ErrorExit(SYSTEM_ERR_EXIT, "Illegal format in CloseParameterFile.");
   }
   
-  FCLOSE(pfp->fp);
+  nFCLOSE(pfp->fp);
 
   FREE(pfp->fn);
   FREE(pfp->mode);
@@ -788,7 +788,7 @@ InitParamCodeBook(PARAM_FILE *pfp, int size, float *entry) {
     codebook->entry[i] = entry[i];
   }
 
-  n = (int)ceil(log2(size));
+  n = (int)ceil(LOG2(size));
   if (n > 32) ErrorExit(SYSTEM_ERR_EXIT, "The size of a codebook is limited to 0xFFFFFFFF");
   else if (n > 16) codebook->bit_size = 32;
   else if (n > 8) codebook->bit_size = 16;

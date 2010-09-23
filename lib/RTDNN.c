@@ -57,7 +57,7 @@
 #include <math.h>
 #include <unistd.h>
 #include "System.h"
-#include "Math.h"
+#include "nMath.h"
 #include "RTDNN.h" 
 
 /* -------------               Id-table Handeling           -------------- */
@@ -1617,9 +1617,9 @@ SaveNet(char *fn, Net *net) {
     *ext = '\0';
   }
 
-  FOPEN(fp, base, "w");
+  nFOPEN(fp, base, "w");
   WriteNet(net, fp);
-  FCLOSE(fp);
+  nFCLOSE(fp);
 
   if (compression) {
     strcpy(command, compression);
@@ -1802,7 +1802,7 @@ LoadNet(char *fn) {
   }
   else {
     /* open normal files */
-    FOPEN(fp, fn, "r");
+    nFOPEN(fp, fn, "r");
   }
 
   net = ReadNet(fp);
@@ -1811,7 +1811,7 @@ LoadNet(char *fn) {
     pclose(fp);
   }
   else {
-    FCLOSE(fp);
+    nFCLOSE(fp);
   }
 
   if (!net) ErrorExit(SYSTEM_ERR_EXIT, "Failed reading network file %s", fn);

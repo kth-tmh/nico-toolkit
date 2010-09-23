@@ -68,7 +68,7 @@
 #include <limits.h>
 #include <stdarg.h>
 #include "System.h"
-#include "Math.h"
+#include "nMath.h"
 
 #define MAXSYSTEMLINE 1024
 
@@ -142,7 +142,7 @@ LoadFileList(char *fn, char *P, char *X, int *N) {
   char **List, *c;
 
   *N = 0;
-  FOPEN(fp, fn, "r")
+  nFOPEN(fp, fn, "r")
   CALLOC(List, 1, char *);
   while (!feof(fp)) {
     fgets(line, 256, fp);
@@ -156,7 +156,7 @@ LoadFileList(char *fn, char *P, char *X, int *N) {
     REALLOC(List, (*N + 1), char *);
     fscanf(fp," \n"); 
   } 
-  FCLOSE(fp);
+  nFCLOSE(fp);
   return List;
 }               
 

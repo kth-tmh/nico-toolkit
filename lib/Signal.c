@@ -65,7 +65,7 @@
 #include        <ctype.h>
 #include        <math.h>
 #include        <unistd.h>
-#include        "Math.h"
+#include        "nMath.h"
 #include        "System.h"
 #include        "Signal.h"
 
@@ -426,7 +426,7 @@ fft842init(FFTType type, int n) {
   int k, l, m;
   double a, p;
 
-  m = (int)ceil(log2((float)n));
+  m = (int)ceil(LOG2((float)n));
   l = power_of_two[m];
   p = pi2 / l;
 
@@ -512,7 +512,7 @@ fft842(float *x, float *y, FFTInitializer *init, int in) {
   cost = init->costab1;
   nofpts = init->size;
 
-  n2pow = (int)log2(nofpts);
+  n2pow = (int)LOG2(nofpts);
 
   fn = nthpo = nofpts;
   if (in == 0) {

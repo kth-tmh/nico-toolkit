@@ -120,17 +120,15 @@ below to these directories. You also need a file listing the datafiles.
 Name it <b>trainfiles</b>, and copy it from the box below. Then create
 the network using the script below, and train it using back-propagation
 through time, with the following command:</font>
-<br><b><font face="Arial,Helvetica">BackProp -S -p net.log -g1e-5 -F20
-30 -T2 -i1000 -d net.rtdnn trainfiles</font></b>
+<br><b><font face="Arial,Helvetica">BackProp -S -p net.log -g1e-6 -F20
+30 -T2 -i5000 -d net.rtdnn trainfiles</font></b>
 <br><font face="Arial,Helvetica">Depending on how fast your computer is,
 this may take some time... You can see if the network converges by inspecting
-the log file, <b>net.log</b>. If it converges, the global error should
-be lower than 1e-1. If not, try another back-propagation run with a lower
-gain:</font>
-<br><b><font face="Arial,Helvetica">BackProp -S -p net.log2 -g1e-6 -F20
-30 -T2 -i1000 -d net.rtdnn trainfiles</font></b>
-<br><font face="Arial,Helvetica">Hopefully, the network has converged after
-the second back-propagation run. You can then excite the network by running
+the log file, <b>net.log</b>.</font><br>
+<font face="Arial,Helvetica">One more thing: you can sometimes get the a warning about "Large Unit Gradient" 
+when runnning BackProp.  This means that the network is getting "overtrained".</font>
+<br><font face="Arial,Helvetica">Hopefully, the network has now converged. You 
+can then excite the network by running
 the command:</font>
 <br><b><font face="Arial,Helvetica">Excite -X TARG net.rtdnn x3.data</font></b>
 <br><font face="Arial,Helvetica">and inspecting the created file <b>x3.act</b>.

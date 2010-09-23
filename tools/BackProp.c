@@ -56,7 +56,7 @@
 #include <math.h>
 #include <string.h>
 #include <unistd.h>
-#include "Math.h"
+#include "nMath.h"
 #include "RTDNN.h"
 #include "Command.h" 
 #include "System.h" 
@@ -124,7 +124,7 @@ FrameEval(NetWork *net) {
       }
     }
 
-    if (max_t < 0.5 && o == t) Hit++;
+    if (max_t >= 0.5 && o == t) Hit++;
   }
 
   return Hit;
@@ -148,7 +148,7 @@ InitDiag(char *fn, int validation_flag, char *argv[], int argc) {
   }
   sprint_time_and_date(time_and_date);
 
-  FOPEN(fp, fn, "w")
+  nFOPEN(fp, fn, "w")
 
   fprintf(fp, "******************** BackProp - Logfile *******************\n");
   fprintf(fp, "HOST   : %s  ", getenv("HOST"));
@@ -166,7 +166,7 @@ InitDiag(char *fn, int validation_flag, char *argv[], int argc) {
   if (validation_flag) fprintf(fp, "     %%Correct   Error\n");
   else  fprintf(fp, "\n");
 
-  FCLOSE(fp);
+  nFCLOSE(fp);
 }
 
 
@@ -187,7 +187,7 @@ OutDiag(char *fn, int i, float err, float bu, float bc,
   }
   else  fprintf(fp, "\n");
 
-  FCLOSE(fp);
+  fclose(fp);
 }
 
 
@@ -196,7 +196,7 @@ AddProgressDot(char *fn) {
   FILE *fp;
   if ((fp = fopen(fn, "a")) == NULL) return;
   fprintf(fp, ".");
-  FCLOSE(fp);
+  fclose(fp);
 }
 
 
@@ -205,7 +205,7 @@ EndProgressDots(char *fn) {
   FILE *fp;
   if ((fp = fopen(fn, "a")) == NULL) return;
   fprintf(fp, "\n");
-  FCLOSE(fp);
+  fclose(fp);
 }
 
 
@@ -217,7 +217,7 @@ ProgressComment(char *fn, char *comment) {
 
   fprintf(fp, "%s\n", comment);
 
-  FCLOSE(fp);
+  fclose(fp);
 }
 
 
@@ -233,7 +233,7 @@ FinishDiag(char *fn, char *prologue) {
   fprintf(fp, "********          %s         ********\n", time_and_date);
   fprintf(fp, "***********************************************************\n");
 
-  FCLOSE(fp);
+  fclose(fp);
 }
 
 
@@ -256,7 +256,7 @@ usage(void) {
   printf("       -i iter       Number of iterations                               (100)\n");
   printf("       -V set stream Set Validation set/stream (1-of-N classification) (off)\n");
   printf("       -v set stream Set Validation set/stream (general case)          (off)\n");
-  printf("       -D decay acc  Multiply gain with 'decay' after epochs where\n");
+  printf("       -D acc decay  Multiply gain with 'decay' after epochs where\n");
   printf("                     the validation set's global error is not\n");
   printf("                     improved, otherwize multiply by 2*acc'.            (off)\n");
   printf("       -C decay num  Multiply gain with 'decay' after epochs where\n");
@@ -557,8 +557,9 @@ main(int argc, char *argv[]) {
       GlobalError += LocalError;
       LocalError /= (float)net->T;
 
-      if (progress_dots && (NumFiles < 60 || k % (NumFiles / 60) == 0))
-	AddProgressDot(Diagnostics);
+      if (progress_dots && (NumFiles < 60 || k % (NumFiles / 60) == 0)) {
+	    AddProgressDot(Diagnostics);
+	  }
 
       /* Prevent data from beeing freed */
       if (prefer_prim_mem) net->has_data = 0;

@@ -124,7 +124,7 @@ spx_read_header(fp,header_size,parse_flag,error)
   p = fh.header_size;
   while ((p < &fh.header_size[sizeof(fh.header_size)-1]) && (*p == ' '))
     p++;
-  if (! isdigit(*p)) {
+  if (! isdigit((int)*p)) {
     *error = "Bad header size specifier";
     goto errexit;
   }
@@ -193,7 +193,7 @@ parse_header(p,hsize,fields,error)
       while ((p < lim) && (*p != '\n'))
 	p++;
       if (p < lim) p++;
-    } else if (isalpha(*p)) {
+    } else if (isalpha((int)*p)) {
       register char *t, *v;
 
       if ((strncmp(p,ENDSTR,sizeof(ENDSTR)-1) == 0) &&
@@ -246,7 +246,7 @@ parse_line(h,t,v,error)
     return CNULL;
   }
   *t = '\0';
-  while (isalnum(*endoffieldname) || (*endoffieldname == '_'))
+  while (isalnum((int)*endoffieldname) || (*endoffieldname == '_'))
     endoffieldname++;
   if (endoffieldname != t) {
     *error = "space expected after field name";
@@ -259,13 +259,13 @@ parse_line(h,t,v,error)
   switch (*(t+2)) {
   case 'i':
     vtype = T_INTEGER;
-    while (isdigit(*endofvalue) || (*endofvalue == '-'))
+    while (isdigit((int)*endofvalue) || (*endofvalue == '-'))
       ++endofvalue;
     vlen = endofvalue - (v + 1);
     break;
   case 'r':
     vtype = T_REAL;
-    while (isdigit(*endofvalue) ||
+    while (isdigit((int)*endofvalue) ||
 	   (*endofvalue == '.') ||
 	   (*endofvalue == '-'))
       ++endofvalue;
@@ -275,7 +275,7 @@ parse_line(h,t,v,error)
     vtype = T_STRING;
     vlen = 0;
     ptr = t + 3;
-    while (isdigit(*ptr))
+    while (isdigit((int)*ptr))
       vlen = 10 * vlen + (*ptr++ - '0');
     if (! vlen) {
       *error = "bad string length";
@@ -632,7 +632,7 @@ FUNCTION int nicosp_print_lines(h,fp)
     else
       (void) fprintf(fp,"%5d: %c %s ",i,spx_tp(fv[i]->type),fv[i]->name);
     for (j=0, p=fv[i]->data; j < fv[i]->datalen; j++, p++)
-      if (isprint(*p) || (*p == '\n') || (*p == '\t'))
+      if (isprint((int)*p) || (*p == '\n') || (*p == '\t'))
 	(void) putc(*p,fp);
       else
 	putc(0, fp);

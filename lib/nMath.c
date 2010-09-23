@@ -51,51 +51,63 @@
 /*                                                                           */
 /* ------------------------------------------------------------------------- */
 
-#include <math.h>
+#include <stdlib.h>
+#include <math.h>  
+#include <time.h> 
+#include <unistd.h>
+#include "nMath.h"
 
-#define FLOAT_PRECISION 1e-6
 
-#ifdef M_PI
-#define PI M_PI
+int 
+AlmostEqual(float a, float b) {
+  return (fabs((a - b) / (a + b)) < FLOAT_PRECISION);
+}
+
+
+float 
+SafeLog(float f) {
+  if (f > SMALL_AMPL) return log(f);
+  else return SMALL_LOG;
+}
+
+
+/* Add numbers in the log domain */
+float 
+LogAdd(float a, float b) {
+  if (a < b) {
+    return b + SafeLog(1.0 + exp(a - b));
+  }
+  else {
+    return a + SafeLog(1.0 + exp(b - a));
+  }
+}
+
+
+/* ---                  Random number generation                         --- */
+#ifdef _TIME_INCLUDED
+void 
+Randomize(void) {
+/* Initialize (randomly) the random number generator */
+  struct timeval t;
+  struct timezone z;
+  gettimeofday(&t,&z);
+
+  srand48((unsigned int)t.tv_usec);
+}
+#else
+void 
+Randomize(void) {
+  srand48(getpid());
+}
 #endif
 
-#ifndef PI
-#define PI 3.1415927
-#endif
+float 
+RectRand(void) {
+/* Returns a square distributed random value [0,1] */ 
+   return (float)drand48();
+}
 
-#ifdef M_LN2
-#define log2(x) (log(x)/M_LN2)
-#endif
-
-#ifndef log2
-#define log2(x) (log(x)/0.6931471805599453)
-#endif
-
-#ifndef RAND_MAX
-#define RAND_MAX 0x8FFF 
-#endif
-
-
-/* Loarithm values less than log(SMALL_AMPL) are approximated by SMALL_LOG
- * These values are used by the SafeLog() function. */
-#define SMALL_AMPL 1e-10 
-#define SMALL_LOG -23.025851
-
-
-int AlmostEqual(float a, float b);
-
-/* Take the log of x, but return SMALL_LOG if x < SMALL_AMPL */
-float SafeLog(float x);
-
-/* Add two log probabilities */
-float LogAdd(float a, float b);
-
-/* Initialize random generartor with a random seed */
-void Randomize(); 
-
-/* Returns a uniform [0;1] distributed random nimber */
-float RectRand(); 
 
 /* --------------------------------------------------------------------------*/
-/*           END OF FILE :  Math.h                                           */
+/*           END OF FILE :  Math.c                                           */
 /* --------------------------------------------------------------------------*/

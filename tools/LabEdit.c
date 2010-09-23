@@ -260,9 +260,9 @@ main(int argc, char *argv[]) {
       printf("processing: %s\n", InList[i]);
     }
 
-    FOPEN(fp, InList[i], "r");
+    nFOPEN(fp, InList[i], "r");
     list = ReadLabels(fp, format);
-    FCLOSE(fp);
+    nFCLOSE(fp);
 
     ChangeLabels(list, replace_from, replace_to, num_replace);
 
@@ -287,25 +287,25 @@ main(int argc, char *argv[]) {
     }
 
     if (!no_output) {
-      FOPEN(fp, OutList[i], "w");
+      nFOPEN(fp, OutList[i], "w");
       WriteLabels(fp, list, out_format);
-      FCLOSE(fp);
+      nFCLOSE(fp);
     }
 
     FreeLabels(list);
   }
 
   if (label_list_flag) {
-    FOPEN(fp, label_list_name, "w");
+    nFOPEN(fp, label_list_name, "w");
 
     for (i = 0; i < num_seen_labels; i++) {
       fprintf(fp, "%s\n", seen_label_list[i]);
     }
-    FCLOSE(fp);
+    nFCLOSE(fp);
   }
 
   if (label_stats_flag) {
-    FOPEN(fp, label_stats_name, "w");
+    nFOPEN(fp, label_stats_name, "w");
 
     fprintf(fp, "%8s %8s %8s %8s\n", "Label", "Freq.", "Mean dur", "Std dev"); 
     for (i = 0; i < num_seen_labels; i++) { 
@@ -316,7 +316,7 @@ main(int argc, char *argv[]) {
       fprintf(fp, "%8s %8i %8.3f %8.3f\n", 
         seen_label_list[i], freq[i], m, sqrt(v));
     }
-    FCLOSE(fp);
+    nFCLOSE(fp);
   }
 
   return SYSTEM_OK_EXIT;

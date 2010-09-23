@@ -426,11 +426,11 @@ main(int argc, char *argv[]) {
       runtime -= zerotime;
 
       fn = ModifyName(InList[j], OutExt, OutDir);
-      FOPEN(outfp, fn, "w")
+      nFOPEN(outfp, fn, "w")
 
       if (binaryflag) OutputBinaryStream(net, stream, outfp); 
       else OutputStream(net, stream, outfp); 
-      FCLOSE(outfp);
+      nFCLOSE(outfp);
 
       if (trace_level > 1) 
         printf("Runtime    : %.2f s\n\n", (float)runtime / 1000.0);
@@ -453,13 +453,13 @@ main(int argc, char *argv[]) {
     }  
 
     fn = ModifyName(InList[j], OutExt, OutDir);
-    FOPEN(outfp, fn, "w")
+    nFOPEN(outfp, fn, "w")
 
     if      (binaryflag) OutputBinaryActs(net, outfp); 
     else if (winner) OutputWinner(net, outfp, cflag, nflag, name_freq); 
     else if (nbest)  OutputNBest (net, outfp, n, cflag);
     else             OutputActs  (net, outfp, cflag, nflag, name_freq);
-    FCLOSE(outfp);
+    nFCLOSE(outfp);
 
     if (trace_level > 1) 
       printf("Runtime    : %.2f s\n\n", (float)runtime / 1000.0);

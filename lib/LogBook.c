@@ -206,7 +206,7 @@ ShowLogBook(FILE *stream, LogBook *book, int info_level) {
   char line[2048];
   while (*pos) {
     end = pos;
-    while (!iscntrl(*end)) end++;
+    while (!iscntrl((int)*end)) end++;
     strncpy(line, pos, (int)(end - pos));
     line[(int)(end - pos)] = '\0';
    
@@ -228,7 +228,7 @@ ShowLogBook(FILE *stream, LogBook *book, int info_level) {
       fprintf(stream, "%s\n", line);
     }
 
-    while (iscntrl(*end) && *end != '\0') end++;
+    while (iscntrl((int)*end) && *end != '\0') end++;
     pos = end;
   }
 }

@@ -189,7 +189,7 @@ char **LoadObjectList(char *fn, int *N) {
   CALLOC(Objs, allocated, char *)
   *N = 0;               
 
-  FOPEN(fp, fn, "r")
+  nFOPEN(fp, fn, "r")
 
   while (!feof(fp)) {  
     if (*N == allocated) {
@@ -204,7 +204,7 @@ char **LoadObjectList(char *fn, int *N) {
     fscanf(fp," \n"); 
   }  
 
-  FCLOSE(fp);
+  nFCLOSE(fp);
 
   REALLOC(Objs, *N, char *)
 
@@ -226,7 +226,7 @@ LoadArgFile(char *fn, char *options) {
   
 
   CALLOC(list, 256, char *)
-  FOPEN(fp, fn, "r")
+  nFOPEN(fp, fn, "r")
 
   while (fgets(line, 1024, fp)) {
     line_num++;
@@ -251,7 +251,7 @@ LoadArgFile(char *fn, char *options) {
       }
     }
   }
-  FCLOSE(fp)
+  nFCLOSE(fp)
 
   /* reallocate and insert the new args in ArgList */
   NumArgs += num_new_args;

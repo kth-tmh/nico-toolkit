@@ -56,8 +56,8 @@
 #include "RTDNN.h"
 #include "System.h"
 #include "Command.h"
-#include "Math.h"
-#include "math.h"
+#include "nMath.h"
+#include "nMath.h"
 
 void 
 usage(void) {

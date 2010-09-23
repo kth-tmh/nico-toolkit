@@ -59,7 +59,7 @@
 #include <unistd.h>
 #include "ParamData.h"
 #include "System.h"
-#include "Math.h"
+#include "nMath.h"
 #include "RTDNN.h" 
 #include "Simulation.h" 
 
@@ -588,9 +588,7 @@ FreeNetWork(NetWork *net) {
   FREE2D(net->stream_ext, net->NumStreams)
 
   FREE(net->stream_offset); 
-  FREE(net->stream_mode); 
-  FREE(net->stream_dir); 
-  FREE(net->stream_ext); 
+  FREE(net->stream_mode);  
   FREE(net->stream_format); 
   FREE(net->stream_size); 
   FREE(net->stream_filter); 
@@ -656,7 +654,7 @@ InitForward(NetWork *net) {
         activity = strtod(value, &ptr);
         if (ptr == value) { /* Value is not numeric... */
           for (i = 0; i < strlen(value); i++) {
-            if (!isspace(value[i])) {
+            if (!isspace((int)value[i])) {
               ErrorExit(SYSTEM_ERR_EXIT, 
                 "The value of environment variable `%s' is non-numeric.", 
                 net->ConstName[num_constants]);

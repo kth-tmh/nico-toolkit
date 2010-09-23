@@ -62,7 +62,7 @@
 #include "ParamData.h"
 #include "Signal.h"
 #include "Constants.h"
-#include "Math.h"
+#include "nMath.h"
 
 
 static int trace = 0;

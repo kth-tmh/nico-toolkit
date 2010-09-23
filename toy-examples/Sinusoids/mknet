@@ -6,15 +6,13 @@ NET=net.rtdnn
 
 CreateNet $NET $NET
 
-AddStream -x data -d /u/nikko/proj/nico/SineExample/data \
-     -F ascii 1 r DATA $NET
+AddStream -x data -d ./data -F ascii 1 r DATA $NET
 
 AddGroup data $NET
 AddUnit -i -u 1 data $NET
 LinkGroup DATA data $NET
 
-AddStream -x targ -d /u/nikko/proj/nico/SineExample/targ  \
-    -F ascii 4 t TARG $NET
+AddStream -x targ -d ./targ -F ascii 4 t TARG $NET
 
 AddGroup targ $NET
 AddUnit -o -u 4 targ $NET
