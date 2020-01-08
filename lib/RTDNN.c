@@ -433,6 +433,7 @@ FreeStream(Stream *str) {
   FREE(str->path);
   FREE(str->a);
   FREE(str->b);
+  FREE(str->Filter);
   FREE(str);
 }
 
@@ -496,6 +497,10 @@ FreeNet(Net *net) {
   FreeLogBook(net->logbook);
 
   FREE(net->IdTab);
+  
+  FREE(net->Name);
+  
+  FREE(net);
 }
 
 

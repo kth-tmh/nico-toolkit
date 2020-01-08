@@ -584,14 +584,15 @@ FreeNetWork(NetWork *net) {
   if (net->has_data) FreeExtData(net);
 
   FREE2D(net->stream_name, net->NumStreams); 
-  FREE2D(net->stream_dir, net->NumStreams)
-  FREE2D(net->stream_ext, net->NumStreams)
-
+  FREE2D(net->stream_dir, net->NumStreams);
+  FREE2D(net->stream_ext, net->NumStreams);
+  FREE2D(net->stream_comp_name, net->NumExt);
+  
   FREE(net->stream_offset); 
   FREE(net->stream_mode);  
   FREE(net->stream_format); 
   FREE(net->stream_size); 
-  FREE(net->stream_filter); 
+  FREE2D(net->stream_filter, net->NumStreams); 
   FREE(net->lin_a); 
   FREE(net->lin_b); 
 
@@ -602,8 +603,11 @@ FreeNetWork(NetWork *net) {
   FREE(net->Xlag);
   FREE(net->link_mode); 
 
-  FREE2D(net->ConstName, net->NumConstants)
+  FREE(net->Constants);
+  FREE2D(net->ConstName, net->NumConstants);
 
+  FREE2D(net->ConLink, net->NumUnits);
+  
   FREE(net->NumInflows);
 
   FREE2D(net->Inflows, net->NumUnits)
@@ -613,6 +617,8 @@ FreeNetWork(NetWork *net) {
   FREE2D(net->Momentum, net->NumUnits)
   FREE2D(net->DeltaW, net->NumUnits)
   FREE2D(net->Plast, net->NumUnits)
+  
+  FREE(net);
 }
 
 

@@ -329,9 +329,11 @@ FreeRTSim(RTSimulator *work) {
   for (i = 0; i < work->num_input_streams; i++) {
     FREE(work->input_component_name[i]);
   }
+  FREE(work->input_component_name);
   for (i = 0; i < work->num_output_streams; i++) {
     FREE(work->output_component_name[i]);
   }
+  FREE(work->output_component_name);
 
   FREE(work->input_stream);
   FREE(work->output_stream);
