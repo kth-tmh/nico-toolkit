@@ -431,6 +431,7 @@ main(int argc, char *argv[]) {
       if (binaryflag) OutputBinaryStream(net, stream, outfp); 
       else OutputStream(net, stream, outfp); 
       nFCLOSE(outfp);
+      FREE(fn);
 
       if (trace_level > 1) 
         printf("Runtime    : %.2f s\n\n", (float)runtime / 1000.0);
@@ -460,6 +461,7 @@ main(int argc, char *argv[]) {
     else if (nbest)  OutputNBest (net, outfp, n, cflag);
     else             OutputActs  (net, outfp, cflag, nflag, name_freq);
     nFCLOSE(outfp);
+    FREE(fn);
 
     if (trace_level > 1) 
       printf("Runtime    : %.2f s\n\n", (float)runtime / 1000.0);

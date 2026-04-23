@@ -187,6 +187,7 @@ OpenAudioFile(char *fn, AudioFileType format, char *mode) {
       if (GetHeaderDouble(header_handle, "sftot", &sf))
         afp->samp_freq = (int)sf;
       else afp->samp_freq = 16000;
+      FreeHeader(header_handle);
     }
     else { /* mode = "w" */
       HANDLE header_handle;
@@ -201,6 +202,7 @@ OpenAudioFile(char *fn, AudioFileType format, char *mode) {
       SetHeaderStr(header_handle, "born", "NICO Toolkit");
 
       SaveHeader(header_handle, afp->fp);
+      FreeHeader(header_handle);
     }
     break;
 
@@ -242,6 +244,7 @@ OpenAudioFile(char *fn, AudioFileType format, char *mode) {
       else 
         ErrorExit(SYSTEM_ERR_EXIT, "Unknown sample byte format (%s) specified in nist header",
 		  byteform);
+      nicosp_close_header(header_handle);
     }
     else { /* mode = "w" */
       ErrorExit(SYSTEM_ERR_EXIT, "Writing NIST audio files not implemented");

@@ -205,7 +205,10 @@ GetId2(Net *net, char *Name, long identifier, IdentifierType type) {
 
   r = strchr(this_, '#');
   rr = strchr(this_, '.');
-  if (!r && !rr) return UNSPEC;
+  if (!r && !rr) {
+    FREE(this_);
+    return UNSPEC;
+  }
 
   if (!r || (rr && rr < r)) {
     delimiter = '.';
@@ -218,7 +221,10 @@ GetId2(Net *net, char *Name, long identifier, IdentifierType type) {
     next = r + 1;
   }
 
-  if (strcmp(this_, id->Name) != 0) return UNSPEC;
+  if (strcmp(this_, id->Name) != 0) {
+    FREE(this_);
+    return UNSPEC;
+  }
 
   if (delimiter == '#') {
     if ((val = GetId3(net, next, identifier, type)) != UNSPEC) {
