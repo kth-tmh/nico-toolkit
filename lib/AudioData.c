@@ -12,7 +12,7 @@
 /*   http://www.speech.kth.se                                                */
 /*                                                                           */
 /*   KTH                                                                     */
-/*   Institutionen foer Tal, musik och hörsel                                */
+/*   Institutionen foer Tal, musik och hÃ¶rsel                                */
 /*   S-100 44 STOCKHOLM                                                      */
 /*   SWEDEN                                                                  */
 /*                                                                           */
@@ -20,7 +20,7 @@
 /*                                                                           */
 /* ------------------------------------------------------------------------- */
 /* Acknowledgemets to Craig Reese for the liner/mulaw conversion routines,   */
-/* NIST for the sphere audio routines, Sten Ternström for the KTH StdHead    */
+/* NIST for the sphere audio routines, Sten TernstrÃ¶m for the KTH StdHead    */
 /* routines, and Erland Lewin (erl@speech.kth.se) for help with debugging.   */
 /* ------------------------------------------------------------------------- */
 /*                                                                           */
