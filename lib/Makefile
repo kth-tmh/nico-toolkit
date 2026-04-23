@@ -1,6 +1,7 @@
 CC	= gcc
 OPT	= -O -ffast-math 
-CFLAGS	= $(OPT) -Wall 
+MALLOC_H_CFLAG := $(shell printf '\043include <malloc.h>\n' | $(CC) -x c -fsyntax-only - >/dev/null 2>&1 && echo -DHAVE_MALLOC_H)
+CFLAGS	= $(OPT) -Wall $(MALLOC_H_CFLAG)
 
 modules = AudioData.o LabelData.o RTDNN.o Speetures.o \
 	Command.o LogBook.o RTSim.o Sphere.o \
@@ -50,5 +51,3 @@ libnico_p.a: $(modules_p)
 	ar rv libnico_p.a $(modules_p)
 
 prof: libnico_p.a
-
-
